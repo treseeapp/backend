@@ -30,3 +30,15 @@ cors.allowed =
 
 # Secret que codificara y descodificara JWT
 jwt.secret =
+
+# Endpoint de Amazon
+amazon.endpointUrl=
+
+# AccesKey de Amazon
+amazon.accessKey=
+
+# SecretKey de Amazon
+amazon.secretKey=
+
+# Nombre del bucket de Amazon
+amazon.bucketName=
