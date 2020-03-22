@@ -1,5 +1,6 @@
 package com.tresee.backend.filter;
 
+import com.tresee.backend.manager.TokenManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -13,6 +14,15 @@ public class TokenFilter implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+
+        /*
+
+        Detecta si la petición es un OPTIONS en tal caso devuelve true.
+        Si no es un OPTIONS comprueba si la petición contiene el Token
+        y comprueba si es válido o si ha expirado.
+
+         */
+
 
         if (request.getMethod().equals("OPTIONS")) {
             return true;
