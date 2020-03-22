@@ -80,7 +80,6 @@
 
 
         <!-- HIBERNATE CORE -->
-
         <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -104,7 +103,17 @@
             <artifactId>jjwt</artifactId>
             <version>0.9.1</version>
         </dependency>
+
+        <!-- AMAZON S3 SDK -->
+        <!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk -->
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk</artifactId>
+            <version>1.11.133</version>
+        </dependency>
+
     </dependencies>
+
 
     <build>
         <plugins>
