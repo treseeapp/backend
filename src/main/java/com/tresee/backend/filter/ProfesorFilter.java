@@ -2,18 +2,15 @@ package com.tresee.backend.filter;
 
 import com.tresee.backend.manager.TokenManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@Order(Ordered.HIGHEST_PRECEDENCE) // Que sea el primer filtro que se lanze
-public class TokenFilter implements HandlerInterceptor {
-
+public class ProfesorFilter implements HandlerInterceptor {
     @Autowired
     TokenManager tokenManager;
+
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -31,30 +28,31 @@ public class TokenFilter implements HandlerInterceptor {
 
         if (auth != null && !auth.isEmpty()) {
             String token = auth.replace("Bearer ", "");
-            String validate = tokenManager.validateToken(token);
-
+            String email = tokenManager.getEmailbyToken(token);
+            /*
+             * TODO Coger el usuario por el email
+             * */
 
             /*
-             * TODO por que hacer esto de expired 403 ?? 403 significa prohibido
-             *
+             * TODO Mirar si tiene el rol profesor
              * */
-            if (validate.equals("ERROR")) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token no valido");
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                return false;
 
-            } else if (validate.equals("EXPIRED")) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token caducado");
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                return false;
-            } else {
-                response.setStatus(HttpServletResponse.SC_OK);
+
+            // TODO Modificar este is profesor con si tienen el rol profesor
+            boolean isProfesor = true;
+            if (isProfesor) {
+
                 return true;
+            } else {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN, "No tienes permisos para esta accion");
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                return false;
             }
         } else {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token no recibido");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return false;
         }
+
     }
 }
