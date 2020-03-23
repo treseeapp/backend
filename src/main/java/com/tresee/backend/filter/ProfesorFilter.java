@@ -1,5 +1,6 @@
 package com.tresee.backend.filter;
 
+import com.tresee.backend.enitty.enums.Rol;
 import com.tresee.backend.manager.TokenManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -28,20 +29,14 @@ public class ProfesorFilter implements HandlerInterceptor {
 
         if (auth != null && !auth.isEmpty()) {
             String token = auth.replace("Bearer ", "");
-            String email = tokenManager.getEmailbyToken(token);
-            /*
-             * TODO Coger el usuario por el email
-             * */
+            String rol=tokenManager.getRol(token);
 
-            /*
-             * TODO Mirar si tiene el rol profesor
-             * */
-
-
-            // TODO Modificar este is profesor con si tienen el rol profesor
             boolean isProfesor = true;
-            if (isProfesor) {
 
+            // TODO COMPROBAR SI EL VALOR LLEGA EN STRING O EN INTEGER
+            if (!rol.equals("PROFESOR")) isProfesor=false;
+
+            if (isProfesor) {
                 return true;
             } else {
                 response.sendError(HttpServletResponse.SC_FORBIDDEN, "No tienes permisos para esta accion");
@@ -53,6 +48,5 @@ public class ProfesorFilter implements HandlerInterceptor {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return false;
         }
-
     }
 }

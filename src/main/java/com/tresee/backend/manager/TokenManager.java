@@ -43,7 +43,23 @@ public class TokenManager {
                     .parseClaimsJws(token)
                     .getBody();
 
-            return (String) claims.get("user");
+            return (String) claims.get("email");
+
+        } catch (Exception e) {
+            return "ERROR";
+        }
+    }
+
+    public String getRol(String token) {
+
+        try {
+
+            Claims claims = Jwts.parser()
+                    .setSigningKey(environment.getProperty("token.secret.key").getBytes())
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            return (String) claims.get("rol");
 
         } catch (Exception e) {
             return "ERROR";
