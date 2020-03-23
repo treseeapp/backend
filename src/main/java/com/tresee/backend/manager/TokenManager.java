@@ -18,17 +18,13 @@ public class TokenManager {
     public String validateToken(String token) {
 
         try {
-
             Jwts.parser()
                     .setSigningKey(environment.getProperty("token.secret.key").getBytes())
                     .parseClaimsJws(token)
                     .getBody();
-
             return "OK";
-
         } catch (ExpiredJwtException e) {
             return "EXPIRED";
-
         } catch (Exception e) {
             return "ERROR";
         }
