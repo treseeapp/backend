@@ -34,10 +34,6 @@ public class TokenFilter implements HandlerInterceptor {
             String validate = tokenManager.validateToken(token);
 
 
-            /*
-             * TODO por que hacer esto de expired 403 ?? 403 significa prohibido
-             *
-             * */
             if (validate.equals("ERROR")) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token no valido");
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
