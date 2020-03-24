@@ -1,25 +1,26 @@
 package com.tresee.backend.manager;
 
+import com.tresee.backend.enitty.Usuario;
+import com.tresee.backend.repository.UsuarioRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 @Service
-@PropertySource("classpath:/application.properties")
 public class TokenManager {
 
     @Autowired
-    Environment environment;
+    private Environment environment;
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     public String validateToken(String token) {
-
         try {
             Jwts.parser()
-                    .setSigningKey(environment.getProperty("token.secret.key").getBytes())
+                    .setSigningKey(environment.getProperty("jwt.secret").getBytes())
                     .parseClaimsJws(token)
                     .getBody();
             return "OK";
@@ -31,11 +32,10 @@ public class TokenManager {
     }
 
     public String getEmailbyToken(String token) {
-
         try {
 
             Claims claims = Jwts.parser()
-                    .setSigningKey(environment.getProperty("token.secret.key").getBytes())
+                    .setSigningKey(environment.getProperty("jwt.secret").getBytes())
                     .parseClaimsJws(token)
                     .getBody();
 
@@ -49,9 +49,8 @@ public class TokenManager {
     public String getRol(String token) {
 
         try {
-
             Claims claims = Jwts.parser()
-                    .setSigningKey(environment.getProperty("token.secret.key").getBytes())
+                    .setSigningKey(environment.getProperty("jwt.secret").getBytes())
                     .parseClaimsJws(token)
                     .getBody();
 
@@ -59,6 +58,29 @@ public class TokenManager {
 
         } catch (Exception e) {
             return "ERROR";
+        }
+    }
+
+    public Claims getClaims(String token) {
+        Claims claims = null;
+        try {
+            claims = Jwts.parser()
+                    .setSigningKey(environment.getProperty("jwt.secret").getBytes())
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return claims;
+    }
+
+    public Usuario getUsuarioFromToken(String token) {
+        try {
+            Claims claims = getClaims(token);
+            Long idTokenUsuario = Long.parseLong(claims.get("idusuario").toString());
+            return usuarioRepository.findByIdusuario(idTokenUsuario);
+        } catch (Exception e) {
+            return null;
         }
     }
 }

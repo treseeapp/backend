@@ -155,4 +155,23 @@ public class Usuario {
     public void setFotoPerfil(String fotoPerfil) {
         this.fotoPerfil = fotoPerfil;
     }
+
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "idusuario=" + idusuario +
+                ", nombre='" + nombre + '\'' +
+                ", apellidos='" + apellidos + '\'' +
+                ", direccion='" + direccion + '\'' +
+                ", email='" + email + '\'' +
+                ", dataNacimiento=" + dataNacimiento +
+                ", contraseña='" + contraseña + '\'' +
+                ", rol=" + rol +
+                ", genero=" + genero +
+                ", modoInicioSesion=" + modoInicioSesion +
+                ", fotoPerfil='" + fotoPerfil + '\'' +
+                ", empresa=" + empresa +
+                ", fichajes=" + fichajes +
+                '}';
+    }
 }

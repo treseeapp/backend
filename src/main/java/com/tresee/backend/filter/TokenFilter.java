@@ -33,7 +33,6 @@ public class TokenFilter implements HandlerInterceptor {
             String token = auth.replace("Bearer ", "");
             String validate = tokenManager.validateToken(token);
 
-
             if (validate.equals("ERROR")) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token no valido");
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -43,10 +42,11 @@ public class TokenFilter implements HandlerInterceptor {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token caducado");
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 return false;
-            } else {
-                response.setStatus(HttpServletResponse.SC_OK);
-                return true;
             }
+
+            response.setStatus(HttpServletResponse.SC_OK);
+            return true;
+
         } else {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token no recibido");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
