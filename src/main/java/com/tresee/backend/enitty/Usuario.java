@@ -21,7 +21,7 @@ public class Usuario {
     @Column(name = "nombre", length = 30, nullable = false)
     private String nombre;
 
-    @Column(name = "apellidos", length = 60)
+    @Column(name = "apellidos", length = 60, nullable = false)
     private String apellidos;
 
     @Column(name = "direccion", length = 60)
@@ -30,7 +30,7 @@ public class Usuario {
     @Column(name = "email", length = 80, nullable = false)
     private String email;
 
-    @Column(name = "data_nacimiento", nullable = false, columnDefinition = "DATE")
+    @Column(name = "data_nacimiento", columnDefinition = "DATE")
     private LocalDate dataNacimiento;
 
     @JsonIgnore
@@ -40,7 +40,7 @@ public class Usuario {
     @Column(name = "rol", nullable = false)
     private Rol rol;
 
-    @Column(name = "genero", nullable = false)
+    @Column(name = "genero")
     private Genero genero;
 
     /*
@@ -49,7 +49,7 @@ public class Usuario {
     @Column(name = "modo_inicio_sesion", nullable = false)
     private ModoInicioSesion modoInicioSesion;
 
-    @Column(name = "foto_perfil", nullable = false)
+    @Column(name = "foto_perfil")
     private String fotoPerfil;
 
     /*TODO Check que este correcto*/
