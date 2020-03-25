@@ -27,4 +27,16 @@ public class UsuarioController {
 
         return tokenManager.getUsuarioFromToken(token);
     }
+
+    @GetMapping("/private/usuario/foto")
+    @Transactional
+    public void getMyFoto(HttpServletRequest request) {
+        /*
+         * TODO este endpoint retornara URL foto amazon
+         *  cogera el usuario del token
+         *  despues cogera el nombre de foto
+         *  pedira a amazon
+         *  retornara url
+         * */
+    }
 }
