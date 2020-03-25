@@ -24,6 +24,6 @@ public class AppConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(getTokenFilter()).addPathPatterns("/private/**", "/admin/**"); // Este filtro valida el token
-        registry.addInterceptor(getTokenFilter()).addPathPatterns("/admin/**"); // Este filtro solo valida que el usuario del token, tenga el rol PROFESOR
+        registry.addInterceptor(getProfesorFilter()).addPathPatterns("/admin/**"); // Este filtro solo valida que el usuario del token, tenga el rol PROFESOR
     }
 }

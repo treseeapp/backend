@@ -1,5 +1,7 @@
 package com.tresee.backend.filter;
 
+import com.tresee.backend.enitty.Usuario;
+import com.tresee.backend.enitty.enums.Rol;
 import com.tresee.backend.manager.TokenManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -25,28 +27,20 @@ public class ProfesorFilter implements HandlerInterceptor {
          * y comprueba si es válido o si ha expirado.
          * */
         String auth = request.getHeader("Authorization");
+        String token = auth.replace("Bearer ", "");
 
-        if (auth != null && !auth.isEmpty()) {
-            String token = auth.replace("Bearer ", "");
-            // TODO mirar de hacer un cast al enum rol desde el valor que nos llega
-            String rol=tokenManager.getRol(token);
+        Usuario usuario = tokenManager.getUsuarioFromToken(token);
+        Rol rol = usuario.getRol();
 
-            boolean isProfesor = true;
+        boolean isProfesor = (rol.equals(Rol.PROFESOR));
 
-            // TODO COMPROBAR SI EL VALOR LLEGA EN STRING O EN INTEGER
-            if (!rol.equals("PROFESOR")) isProfesor=false;
-
-            if (isProfesor) {
-                return true;
-            } else {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN, "No tienes permisos para esta accion");
-                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                return false;
-            }
+        if (isProfesor) {
+            return true;
         } else {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token no recibido");
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "No tienes permisos para esta accion");
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return false;
         }
+
     }
 }
