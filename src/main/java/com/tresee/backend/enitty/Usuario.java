@@ -34,7 +34,7 @@ public class Usuario {
     private LocalDate dataNacimiento;
 
     @JsonIgnore
-    @Column(name = "contraseña", length = 300)
+    @Column(name = "contraseña", length = 300, nullable = false)
     private String contraseña;
 
     @Column(name = "rol", nullable = false)
@@ -46,15 +46,16 @@ public class Usuario {
     /*
      * Local - Google - Facebook ......
      * */
-    @Column(name = "modo_inicio_sesion", nullable = false)
+    @Column(name = "modo_inicio_sesion")
     private ModoInicioSesion modoInicioSesion;
 
     @Column(name = "foto_perfil")
     private String fotoPerfil;
 
     /*TODO Check que este correcto*/
+    @JsonIgnore // Mirar si nos interesa
     @ManyToOne
-    @JoinColumn(foreignKey = @ForeignKey(name = "empresa_idempresa"), name = "empresa_idempresa", nullable = true)
+    @JoinColumn(foreignKey = @ForeignKey(name = "empresa_idempresa"), name = "empresa_idempresa")
     private Empresa empresa;
 
     @OneToMany(mappedBy = "usuario", orphanRemoval = false, fetch = FetchType.EAGER, cascade = CascadeType.ALL)

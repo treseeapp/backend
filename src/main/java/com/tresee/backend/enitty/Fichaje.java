@@ -21,10 +21,9 @@ public class Fichaje {
     @Column(name = "hora_salida", columnDefinition = "TIME")
     private Time horaSalida;
 
-
     /*TODO Check que este correcto*/
     @ManyToOne
-    @JoinColumn(foreignKey = @ForeignKey(name = "usuario_idusuario"), name = "usuario_idusuario", nullable = true)
+    @JoinColumn(foreignKey = @ForeignKey(name = "usuario_idusuario"), name = "usuario_idusuario", nullable = false)
     private Usuario usuario;
 
     public Fichaje() {

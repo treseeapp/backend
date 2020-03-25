@@ -18,13 +18,13 @@ public class Empresa {
     @Column(name = "contacto", length = 300, nullable = false)
     private String contacto;
 
-    @Column(name = "fecha_inicio_practicas", nullable = false, columnDefinition = "DATE")
+    @Column(name = "fecha_inicio_practicas", columnDefinition = "DATE")
     private LocalDate inicioPracticas;
 
+    /*TODO Check que este correcto*/
     @OneToMany(mappedBy = "empresa", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<EmpresaTieneDia> empresaTieneDias;
 
-    /*TODO Check que este correcto*/
     @OneToMany(mappedBy = "empresa", orphanRemoval = false, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Usuario> estudiantes;
 
