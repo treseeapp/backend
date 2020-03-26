@@ -157,6 +157,22 @@ public class Usuario {
         this.fotoPerfil = fotoPerfil;
     }
 
+    public Empresa getEmpresa() {
+        return empresa;
+    }
+
+    public List<Fichaje> getFichajes() {
+        return fichajes;
+    }
+
+    public void setEmpresa(Empresa empresa) {
+        this.empresa = empresa;
+    }
+
+    public void setFichajes(List<Fichaje> fichajes) {
+        this.fichajes = fichajes;
+    }
+
     @Override
     public String toString() {
         return "Usuario{" +

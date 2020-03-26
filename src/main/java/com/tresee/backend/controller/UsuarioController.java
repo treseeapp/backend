@@ -64,6 +64,16 @@ public class UsuarioController {
         return new ResponseEntity<>("Información modificada correctamente", HttpStatus.OK);
     }
 
+    @DeleteMapping("/private/usuario")
+    @Transactional
+    public ResponseEntity<String> deleteMe(HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+        token = token.replace("Bearer ", "");
+        Usuario tokenUser = tokenManager.getUsuarioFromToken(token);
+
+        usuarioManager.delete(tokenUser);
+        return new ResponseEntity<>("Usuariop eliminado correctamente", HttpStatus.OK);
+    }
 
     @PutMapping("/private/usuario/foto")
     @Transactional

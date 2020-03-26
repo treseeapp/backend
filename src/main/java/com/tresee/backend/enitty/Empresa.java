@@ -65,4 +65,20 @@ public class Empresa {
     public void setInicioPracticas(LocalDate inicioPracticas) {
         this.inicioPracticas = inicioPracticas;
     }
+
+    public List<EmpresaTieneDia> getEmpresaTieneDias() {
+        return empresaTieneDias;
+    }
+
+    public void setEmpresaTieneDias(List<EmpresaTieneDia> empresaTieneDias) {
+        this.empresaTieneDias = empresaTieneDias;
+    }
+
+    public List<Usuario> getEstudiantes() {
+        return estudiantes;
+    }
+
+    public void setEstudiantes(List<Usuario> estudiantes) {
+        this.estudiantes = estudiantes;
+    }
 }

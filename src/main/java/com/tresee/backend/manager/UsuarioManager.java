@@ -2,8 +2,12 @@ package com.tresee.backend.manager;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.tresee.backend.enitty.Empresa;
+import com.tresee.backend.enitty.Fichaje;
 import com.tresee.backend.enitty.Usuario;
 import com.tresee.backend.enitty.enums.Genero;
+import com.tresee.backend.repository.EmpresaRepository;
+import com.tresee.backend.repository.FichajeRepository;
 import com.tresee.backend.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +24,12 @@ public class UsuarioManager {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private FichajeRepository fichajeRepository;
+
+    @Autowired
+    private EmpresaRepository empresaRepository;
 
     public List<Usuario> findAll() {
         List<Usuario> toReturn = new LinkedList<>();
@@ -42,6 +52,29 @@ public class UsuarioManager {
     }
 
     public void delete(Usuario user) {
+
+        /*
+         * Tenemos que borrar todas los fichajes de este usuario
+         * */
+        if (user.getFichajes() != null) {
+            List<Fichaje> fichajes = user.getFichajes();
+            for (Fichaje individual : user.getFichajes()) {
+                fichajeRepository.delete(individual);
+            }
+        }
+        /*
+         * Quitar nuestro usuario de la lista de usuarios de la empresa
+         * · quitar la empresa de nuestro usuario
+         * · guardar la empresa
+         * */
+        if (user.getEmpresa() != null) {
+            Empresa empresa = user.getEmpresa();
+            empresa.getEstudiantes().remove(user);
+            empresa.setEstudiantes(empresa.getEstudiantes());
+            user.setEmpresa(null);
+
+            empresaRepository.save(empresa);
+        }
         usuarioRepository.delete(user);
     }
 
