@@ -90,7 +90,7 @@ public class UsuarioController {
 
     @GetMapping("/private/usuario/foto")
     @Transactional
-    public void getMyFoto(HttpServletRequest request) {
+    public ResponseEntity<String> getMyFoto(HttpServletRequest request) {
         /*
          * TODO este endpoint retornara URL foto amazon
          *  cogera el usuario del token
