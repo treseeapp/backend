@@ -77,7 +77,20 @@ public class UsuarioController {
 
     @PutMapping("/private/usuario/foto")
     @Transactional
-    public void getMyFoto(@RequestPart(value = "file") final MultipartFile uploadfile, HttpServletRequest request) throws IOException {
+    public void saveMyFoto(@RequestPart(value = "file") final MultipartFile uploadfile, HttpServletRequest request) throws IOException {
+        /*
+         * TODO este endpoint subira la foto a amazon
+         *  cogera el usuario del token
+         *  despues creara la foto
+         *  guardara la foto en amazon
+         *  guardara el nombre de la foto en el usuario
+         *  guardara el usuario
+         * */
+    }
+
+    @GetMapping("/private/usuario/foto")
+    @Transactional
+    public void getMyFoto(HttpServletRequest request) {
         /*
          * TODO este endpoint retornara URL foto amazon
          *  cogera el usuario del token
