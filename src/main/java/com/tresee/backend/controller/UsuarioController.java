@@ -7,13 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-
+import java.io.IOException;
 
 @RestController
 public class UsuarioController {
@@ -46,6 +44,16 @@ public class UsuarioController {
 
         Usuario recivedInfo = usuarioManager.fromJson(json);
 
+        /*
+        * Antes de modificar nada,
+        * comprobamos que entre los campos recibidos
+        * se encuentrar los obligatorios
+        * */
+        if (recivedInfo.getNombre()==null) return new ResponseEntity<>("No se ha recibido ningun nombre", HttpStatus.BAD_REQUEST);
+
+        /*
+        * Todos los campos recibidos estan OK
+        * */
         tokenUser.setNombre(recivedInfo.getNombre());
         tokenUser.setApellidos(recivedInfo.getApellidos());
         tokenUser.setDireccion(recivedInfo.getDireccion());
@@ -57,9 +65,9 @@ public class UsuarioController {
     }
 
 
-    @GetMapping("/private/usuario/foto")
+    @PutMapping("/private/usuario/foto")
     @Transactional
-    public void getMyFoto(HttpServletRequest request) {
+    public void getMyFoto(@RequestPart(value = "file") final MultipartFile uploadfile, HttpServletRequest request) throws IOException {
         /*
          * TODO este endpoint retornara URL foto amazon
          *  cogera el usuario del token
