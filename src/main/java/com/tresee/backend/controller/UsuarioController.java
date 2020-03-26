@@ -98,5 +98,6 @@ public class UsuarioController {
          *  pedira a amazon
          *  retornara url
          * */
+        return new ResponseEntity<>("algo", HttpStatus.OK);
     }
 }
