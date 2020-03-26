@@ -1,6 +1,7 @@
 package com.tresee.backend.controller;
 
 import com.tresee.backend.enitty.Usuario;
+import com.tresee.backend.manager.AmazonManager;
 import com.tresee.backend.manager.TokenManager;
 import com.tresee.backend.manager.UsuarioManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,9 @@ public class UsuarioController {
 
     @Autowired
     private TokenManager tokenManager;
+
+    @Autowired
+    private AmazonManager amazonManager;
 
     @GetMapping("/private/usuario")
     @Transactional
@@ -78,26 +82,36 @@ public class UsuarioController {
     @PutMapping("/private/usuario/foto")
     @Transactional
     public void saveMyFoto(@RequestPart(value = "file") final MultipartFile uploadfile, HttpServletRequest request) throws IOException {
+
         /*
-         * TODO este endpoint subira la foto a amazon
-         *  cogera el usuario del token
-         *  despues creara la foto
-         *  guardara la foto en amazon
-         *  guardara el nombre de la foto en el usuario
-         *  guardara el usuario
+         * Cogemos el usuario del token, asi nos aseguramos de
+         * que el usuario que se modifica es a si mismo
          * */
+        String token = request.getHeader("Authorization");
+        token = token.replace("Bearer ", "");
+        Usuario tokenUser = tokenManager.getUsuarioFromToken(token);
+
+        String imageName=amazonManager.uploadFile(uploadfile);
+
+        tokenUser.setFotoPerfil(imageName);
+        usuarioManager.update(tokenUser);
+
     }
 
     @GetMapping("/private/usuario/foto")
     @Transactional
     public ResponseEntity<String> getMyFoto(HttpServletRequest request) {
+
         /*
-         * TODO este endpoint retornara URL foto amazon
-         *  cogera el usuario del token
-         *  despues cogera el nombre de foto
-         *  pedira a amazon
-         *  retornara url
+         * Cogemos el usuario del token, asi nos aseguramos de
+         * que el usuario que se modifica es a si mismo
          * */
-        return new ResponseEntity<>("algo", HttpStatus.OK);
+        String token = request.getHeader("Authorization");
+        token = token.replace("Bearer ", "");
+        Usuario tokenUser = tokenManager.getUsuarioFromToken(token);
+
+        String url=amazonManager.getFile(tokenUser.getFotoPerfil());
+
+        return new ResponseEntity<>(url, HttpStatus.OK);
     }
 }
