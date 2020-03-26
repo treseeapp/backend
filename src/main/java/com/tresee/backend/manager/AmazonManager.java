@@ -11,6 +11,7 @@ import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.Region;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
 
+@Service
 public class AmazonManager {
 
     private AmazonS3 s3client;
