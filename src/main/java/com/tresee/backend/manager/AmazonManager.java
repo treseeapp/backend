@@ -1,13 +1,24 @@
 package com.tresee.backend.manager;
 
+import com.amazonaws.HttpMethod;
+import com.amazonaws.SdkClientException;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.Region;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Date;
 
 public class AmazonManager {
 
@@ -26,5 +37,79 @@ public class AmazonManager {
     private void initializeAmazon() {
         BasicAWSCredentials creds = new BasicAWSCredentials(accessKey, secretKey);
         this.s3client = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(creds)).withRegion(String.valueOf(Region.EU_London)).build();
+    }
+
+    public String uploadFile(MultipartFile multipartFile) {
+
+        String fileName = "";
+
+        try {
+            File file = convertMultiPartToFile(multipartFile);
+            fileName = generateFileName(multipartFile);
+            uploadFileTos3bucket(fileName, file);
+            file.delete();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return fileName;
+    }
+
+    private String generateFileName(MultipartFile multiPart) {
+
+        /*
+         * Cogemos la fecha actual para crear el nombre del archivo
+         * antes de subirlo a Amazon
+         * */
+
+        return new Date().getTime() + "-" + multiPart.getOriginalFilename().replace(" ", "_");
+    }
+
+    private File convertMultiPartToFile(MultipartFile file) throws IOException {
+
+        /*
+         * Volvemos a juntar las partes del archivo ya que desde el
+         * cliente nos llega en partes
+         * */
+        File convFile = new File(file.getOriginalFilename());
+        FileOutputStream fos = new FileOutputStream(convFile);
+        fos.write(file.getBytes());
+        fos.close();
+        return convFile;
+    }
+
+    private void uploadFileTos3bucket(String fileName, File file) {
+        this.s3client.putObject(new PutObjectRequest(bucketName, fileName, file)
+                .withCannedAcl(CannedAccessControlList.Private));
+    }
+
+    public String getFile(String fileName) {
+        String urlPreSigned = this.generatePresignedUrl(fileName);
+        return urlPreSigned;
+    }
+
+     /*
+     * Generamos una URL temporal de un tiempo establecido del nombre
+     * del archivo recibido que se encuentra en el bucket de Amazon
+     * */
+    private String generatePresignedUrl(String fileName) {
+
+        try {
+
+            Date expiration = new Date();
+            long expTimeMillis = expiration.getTime();
+            expTimeMillis += 1000 * 60;
+            expiration.setTime(expTimeMillis);
+
+            GeneratePresignedUrlRequest generatePresignedUrlRequest =
+                    new GeneratePresignedUrlRequest(bucketName, fileName)
+                            .withMethod(HttpMethod.GET)
+                            .withExpiration(expiration);
+            URL url = s3client.generatePresignedUrl(generatePresignedUrlRequest);
+
+            return url.toString();
+
+        } catch (SdkClientException e) {
+            return null;
+        }
     }
 }
