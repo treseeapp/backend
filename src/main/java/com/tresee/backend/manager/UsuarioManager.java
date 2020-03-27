@@ -90,7 +90,7 @@ public class UsuarioManager {
         if (jsonObject.get("direccion") != null) {
             user.setDireccion(jsonObject.get("direccion").getAsString());
         }
-        if (jsonObject.get("dataNacimiento") != null) {
+        if (jsonObject.get("dataNacimiento") != null && !jsonObject.get("dataNacimiento").getAsString().equals("")) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/d");
             LocalDate date = LocalDate.parse(jsonObject.get("dataNacimiento").getAsString(), formatter);
             user.setDataNacimiento(date);
