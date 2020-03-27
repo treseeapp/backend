@@ -81,7 +81,7 @@ public class UsuarioController {
 
     @PutMapping("/private/usuario/foto")
     @Transactional
-    public void saveMyFoto(@RequestPart(value = "file") final MultipartFile uploadfile, HttpServletRequest request) throws IOException {
+    public ResponseEntity<String> saveMyFoto(@RequestPart(value = "file") final MultipartFile uploadfile, HttpServletRequest request) throws IOException {
 
         /*
          * Cogemos el usuario del token, asi nos aseguramos de
@@ -96,6 +96,7 @@ public class UsuarioController {
         if (imageName != null) tokenUser.setFotoPerfil(imageName);
 
         usuarioManager.update(tokenUser);
+        return new ResponseEntity<>("Foto subida correctamente", HttpStatus.OK);
     }
 
     @GetMapping("/private/usuario/foto")
