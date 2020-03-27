@@ -91,11 +91,11 @@ public class UsuarioController {
         token = token.replace("Bearer ", "");
         Usuario tokenUser = tokenManager.getUsuarioFromToken(token);
 
-        String imageName=amazonManager.uploadFile(uploadfile);
+        String imageName = amazonManager.uploadFile(uploadfile);
 
-        tokenUser.setFotoPerfil(imageName);
+        if (imageName != null) tokenUser.setFotoPerfil(imageName);
+
         usuarioManager.update(tokenUser);
-
     }
 
     @GetMapping("/private/usuario/foto")

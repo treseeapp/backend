@@ -44,14 +44,16 @@ public class AmazonManager {
     public String uploadFile(MultipartFile multipartFile) {
 
         String fileName = "";
-
+        File file = null;
         try {
-            File file = convertMultiPartToFile(multipartFile);
+            file = convertMultiPartToFile(multipartFile);
             fileName = generateFileName(multipartFile);
             uploadFileTos3bucket(fileName, file);
             file.delete();
         } catch (Exception e) {
             e.printStackTrace();
+            fileName = null; // SI NO SE HA PODIDO SUBIR LA FOTO, EN DDBB SE GUARDA UN NULL
+            file.delete();
         }
         return fileName;
     }
