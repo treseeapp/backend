@@ -21,6 +21,9 @@ public class Empresa {
     @Column(name = "fecha_inicio_practicas", columnDefinition = "DATE")
     private LocalDate inicioPracticas;
 
+    @Column(name = "direccion", length = 100)
+    private String direccion;
+
     /*TODO Check que este correcto*/
     @OneToMany(mappedBy = "empresa", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<EmpresaTieneDia> empresaTieneDias;
@@ -80,5 +83,13 @@ public class Empresa {
 
     public void setEstudiantes(List<Usuario> estudiantes) {
         this.estudiantes = estudiantes;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
     }
 }

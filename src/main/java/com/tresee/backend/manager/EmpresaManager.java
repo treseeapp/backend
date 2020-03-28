@@ -31,6 +31,10 @@ public class EmpresaManager {
         if (jsonObject.get("contacto") != null) {
             empresa.setContacto(jsonObject.get("contacto").getAsString());
         }
+        if (jsonObject.get("direccion") != null) {
+            empresa.setDireccion(jsonObject.get("direccion").getAsString());
+        }
+
         if (jsonObject.get("fechaInicioPracticas") != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/d");
             LocalDate date = LocalDate.parse(jsonObject.get("fechaInicioPracticas").getAsString(), formatter);
