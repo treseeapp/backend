@@ -101,7 +101,7 @@ public class AmazonManager {
 
             Date expiration = new Date();
             long expTimeMillis = expiration.getTime();
-            expTimeMillis += 1000 * 60;
+            expTimeMillis += 1000 * 10;
             expiration.setTime(expTimeMillis);
 
             GeneratePresignedUrlRequest generatePresignedUrlRequest =
@@ -114,6 +114,16 @@ public class AmazonManager {
 
         } catch (SdkClientException e) {
             return null;
+        }
+    }
+
+    public boolean deletePicture(String nombre) {
+        try {
+            this.s3client.deleteObject(this.bucketName, nombre);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
     }
 }

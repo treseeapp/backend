@@ -93,7 +93,10 @@ public class UsuarioController {
 
         String imageName = amazonManager.uploadFile(uploadfile);
 
-        if (imageName != null) tokenUser.setFotoPerfil(imageName);
+        if (imageName != null) {
+            this.amazonManager.deletePicture(tokenUser.getFotoPerfil());
+            tokenUser.setFotoPerfil(imageName);
+        }
 
         usuarioManager.update(tokenUser);
         return new ResponseEntity<>("Foto subida correctamente", HttpStatus.OK);
