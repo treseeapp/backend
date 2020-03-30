@@ -53,4 +53,8 @@ public class EmpresaManager {
         }
         return toReturn;
     }
+
+    public Empresa findById(Long id) {
+        return this.empresaRepository.findByIdempresa(id);
+    }
 }
