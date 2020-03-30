@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class AppConfig implements WebMvcConfigurer {
+public class AppConfiguration implements WebMvcConfigurer {
 
     @Bean
     public TokenFilter getTokenFilter() {
