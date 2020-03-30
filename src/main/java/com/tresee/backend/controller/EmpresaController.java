@@ -42,4 +42,24 @@ public class EmpresaController {
         empresaManager.create(empresa);
         return new ResponseEntity<>("Empresa creada correctamente", HttpStatus.OK);
     }
+
+    @PutMapping("/admin/empresas")
+    @Transactional
+    public ResponseEntity<String> modifyEmpresa(@RequestBody String json) {
+        Empresa empresa = empresaManager.fromJsonCreate(json);
+        if (empresa.getIdempresa() == null)
+            return new ResponseEntity<>("No se ha recibido ninung id para modificar", HttpStatus.BAD_REQUEST);
+        if (empresa.getNombre() == null
+                || empresa.getContacto() == null)
+            return new ResponseEntity<>("No se han recibido los parametros obligatorios", HttpStatus.BAD_REQUEST);
+
+        Empresa empresaToModify = this.empresaManager.findById(empresa.getIdempresa());
+        empresaToModify.setNombre(empresa.getNombre());
+        empresaToModify.setContacto(empresa.getContacto());
+        empresaToModify.setDireccion(empresa.getDireccion());
+        empresaToModify.setInicioPracticas(empresa.getInicioPracticas());
+
+        empresaManager.update(empresaToModify);
+        return new ResponseEntity<>("Empresa modificada correctamente", HttpStatus.OK);
+    }
 }

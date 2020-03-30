@@ -27,6 +27,9 @@ public class EmpresaManager {
     public Empresa fromJsonCreate(String json) {
         Empresa empresa = new Empresa();
         JsonObject jsonObject = gson.fromJson(json, JsonObject.class);
+        if (jsonObject.get("idempresa") != null) {
+            empresa.setIdempresa(jsonObject.get("idempresa").getAsLong());
+        }
         if (jsonObject.get("nombre") != null) {
             empresa.setNombre(jsonObject.get("nombre").getAsString());
         }
@@ -56,5 +59,9 @@ public class EmpresaManager {
 
     public Empresa findById(Long id) {
         return this.empresaRepository.findByIdempresa(id);
+    }
+
+    public void update(Empresa empresaToModify) {
+        this.empresaRepository.save(empresaToModify);
     }
 }
