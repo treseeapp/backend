@@ -89,16 +89,14 @@ public class EmpresaController {
     public ResponseEntity<String> saveMyFoto(@RequestPart(value = "file") final MultipartFile uploadfile, @PathVariable Long id, HttpServletRequest request) throws IOException {
 
         String imageName = amazonManager.uploadFile(uploadfile);
-
         Empresa empresa = empresaManager.findById(id);
-        empresa.setFotoEmpresa(imageName);
 
        if (imageName != null) {
-            this.amazonManager.deletePicture(empresa.getFotoEmpresa());
+           // this.amazonManager.deletePicture(empresa.getFotoEmpresa());
             empresa.setFotoEmpresa(imageName);
         }
 
-        empresaManager.update(empresa);
+       empresaManager.update(empresa);
 
         return new ResponseEntity<>("Foto subida correctamente", HttpStatus.OK);
     }
