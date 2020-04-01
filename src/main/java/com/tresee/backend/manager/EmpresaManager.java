@@ -3,7 +3,11 @@ package com.tresee.backend.manager;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.tresee.backend.enitty.Empresa;
+import com.tresee.backend.enitty.EmpresaTieneDia;
+import com.tresee.backend.enitty.Usuario;
 import com.tresee.backend.repository.EmpresaRepository;
+import com.tresee.backend.repository.EmpresaTieneDiaRepository;
+import com.tresee.backend.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +23,12 @@ public class EmpresaManager {
 
     @Autowired
     private EmpresaRepository empresaRepository;
+
+    @Autowired
+    private EmpresaTieneDiaRepository empresaTieneDiaRepository;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     public void create(Empresa empresa) {
         empresaRepository.save(empresa);
@@ -63,5 +73,24 @@ public class EmpresaManager {
 
     public void update(Empresa empresaToModify) {
         this.empresaRepository.save(empresaToModify);
+    }
+
+    public void delete(Empresa empresa) {
+        List<Usuario> listadoUsuarios = empresa.getEstudiantes();
+        for (Usuario user : listadoUsuarios) {
+            user.setEmpresa(null);
+            usuarioRepository.save(user);
+        }
+        empresa.setEstudiantes(null);
+
+        List<EmpresaTieneDia> lista = empresa.getEmpresaTieneDias();
+        for (EmpresaTieneDia intermedio : lista) {
+            empresaTieneDiaRepository.delete(intermedio);
+        }
+
+        empresa.setEmpresaTieneDias(null);
+
+
+        this.empresaRepository.delete(empresa);
     }
 }

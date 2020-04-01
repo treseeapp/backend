@@ -9,15 +9,17 @@ import java.sql.Time;
 public class EmpresaTieneDia implements Serializable {
 
     /*TODO Check que este correcto*/
-
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idempresa_tiene_dia")
+    private Long idempresa_tiene_dia;
+
     @ManyToOne
-    @JoinColumn(name = "empresa_idempresa", nullable = false)
+    @JoinColumn(name = "empresa_idempresa")
     private Empresa empresa;
 
-    @Id
     @ManyToOne
-    @JoinColumn(name = "dia_iddia", nullable = false)
+    @JoinColumn(name = "dia_iddia")
     private Dia dia;
 
     @Column(name = "hora_entrada", columnDefinition = "TIME")

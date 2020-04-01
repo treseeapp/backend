@@ -62,4 +62,18 @@ public class EmpresaController {
         empresaManager.update(empresaToModify);
         return new ResponseEntity<>("Empresa modificada correctamente", HttpStatus.OK);
     }
+
+    @DeleteMapping("/admin/empresas")
+    @Transactional
+    public ResponseEntity<String> deleteEmpresa(@RequestBody String json) {
+        Empresa empresa = empresaManager.fromJsonCreate(json);
+        if (empresa.getIdempresa() == null)
+            return new ResponseEntity<>("No se ha recibido ninung id para eliminar", HttpStatus.BAD_REQUEST);
+
+        Empresa empresaToModify = this.empresaManager.findById(empresa.getIdempresa());
+
+        this.empresaManager.delete(empresaToModify);
+
+        return new ResponseEntity<>("Empresa eliminada correctamente", HttpStatus.OK);
+    }
 }
