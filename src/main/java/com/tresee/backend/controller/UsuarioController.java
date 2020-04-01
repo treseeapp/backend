@@ -114,7 +114,10 @@ public class UsuarioController {
         token = token.replace("Bearer ", "");
         Usuario tokenUser = tokenManager.getUsuarioFromToken(token);
 
-        String url=amazonManager.getFile(tokenUser.getFotoPerfil());
+        if (tokenUser.getFotoPerfil() == null || tokenUser.getFotoPerfil().equals("")) {
+            return new ResponseEntity<>("No tienes foto perfil", HttpStatus.BAD_REQUEST);
+        }
+        String url = amazonManager.getFile(tokenUser.getFotoPerfil());
 
         return new ResponseEntity<>(url, HttpStatus.OK);
     }
