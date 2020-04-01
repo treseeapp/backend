@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -46,7 +45,6 @@ public class EmpresaController {
     public Empresa getEmpresas(@PathVariable Long id) {
         return this.empresaManager.findById(id);
     }
-
 
     @PostMapping("/admin/empresas")
     @Transactional
