@@ -76,7 +76,7 @@ public class UsuarioController {
         Usuario tokenUser = tokenManager.getUsuarioFromToken(token);
 
         usuarioManager.delete(tokenUser);
-        return new ResponseEntity<>("Usuariop eliminado correctamente", HttpStatus.OK);
+        return new ResponseEntity<>("Usuario eliminado correctamente", HttpStatus.OK);
     }
 
     @PutMapping("/private/usuario/foto")
