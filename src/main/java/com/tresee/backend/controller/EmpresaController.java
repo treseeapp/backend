@@ -1,10 +1,8 @@
 package com.tresee.backend.controller;
 
 import com.tresee.backend.enitty.Empresa;
-import com.tresee.backend.enitty.Usuario;
 import com.tresee.backend.manager.AmazonManager;
 import com.tresee.backend.manager.EmpresaManager;
-import com.tresee.backend.manager.UsuarioManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
