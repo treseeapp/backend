@@ -154,4 +154,18 @@ public class UsuarioController {
         }
         return user;
     }
+
+    @GetMapping("/admin/estudiantes/{id}/foto")
+    @Transactional
+    public ResponseEntity<String> getStudentFoto(@PathVariable Long id) {
+
+        Usuario usuario = usuarioManager.findById(id);
+
+        if (usuario.getFotoPerfil() == null || usuario.getFotoPerfil().equals("")) {
+            return new ResponseEntity<>("El usuario " + usuario.getNombre() + " no tiene foto de perfil", HttpStatus.BAD_REQUEST);
+        }
+        String url = amazonManager.getFile(usuario.getFotoPerfil());
+        return new ResponseEntity<>(url, HttpStatus.OK);
+    }
+
 }
