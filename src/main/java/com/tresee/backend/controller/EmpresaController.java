@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.tresee.backend.enitty.Empresa;
 import com.tresee.backend.enitty.Usuario;
 import com.tresee.backend.manager.EmpresaManager;
+import com.tresee.backend.manager.UsuarioManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +22,19 @@ public class EmpresaController {
     private EmpresaManager empresaManager;
 
     @Autowired
+    private UsuarioManager usuarioManager;
+
+    @Autowired
     private Gson gson;
 
     @GetMapping("/admin/empresas")
     public List<Empresa> getEmpresas() {
         return this.empresaManager.getAll();
+    }
+
+    @GetMapping("/admin/estudiantes")
+    public List<Usuario> getEstudiantes() {
+        return this.usuarioManager.getAllEstudiantes();
     }
 
     @GetMapping("/admin/empresas/{id}")
