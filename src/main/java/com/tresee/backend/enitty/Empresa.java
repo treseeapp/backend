@@ -24,6 +24,9 @@ public class Empresa {
     @Column(name = "direccion", length = 100)
     private String direccion;
 
+    @Column(name = "foto_empresa")
+    private String fotoEmpresa;
+
     /*TODO Check que este correcto*/
     @OneToMany(mappedBy = "empresa", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<EmpresaTieneDia> empresaTieneDias;
@@ -68,6 +71,10 @@ public class Empresa {
     public void setInicioPracticas(LocalDate inicioPracticas) {
         this.inicioPracticas = inicioPracticas;
     }
+
+    public String getFotoEmpresa() { return fotoEmpresa; }
+
+    public void setFotoEmpresa(String fotoEmpresa) { this.fotoEmpresa = fotoEmpresa; }
 
     public List<EmpresaTieneDia> getEmpresaTieneDias() {
         return empresaTieneDias;

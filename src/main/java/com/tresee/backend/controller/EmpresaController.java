@@ -1,6 +1,7 @@
 package com.tresee.backend.controller;
 
 import com.tresee.backend.enitty.Empresa;
+import com.tresee.backend.enitty.Usuario;
 import com.tresee.backend.manager.EmpresaManager;
 import com.tresee.backend.manager.UsuarioManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -78,5 +82,48 @@ public class EmpresaController {
         this.empresaManager.delete(empresaABorrar);
 
         return new ResponseEntity<>("Empresa eliminada correctamente", HttpStatus.OK);
+    }
+
+    @PutMapping("/admin/empresas/{id}/foto")
+    @Transactional
+    public ResponseEntity<String> saveMyFoto(@RequestPart(value = "file") final MultipartFile uploadfile, HttpServletRequest request) throws IOException {
+
+        /*
+         * Cogemos el id de la empresa para asignar esa imágen
+         * a la empresa
+         * */
+        String token = request.getHeader("Authorization");
+        token = token.replace("Bearer ", "");
+        Usuario tokenUser = tokenManager.getUsuarioFromToken(token);
+
+        String imageName = amazonManager.uploadFile(uploadfile);
+
+        if (imageName != null) {
+            this.amazonManager.deletePicture(tokenUser.getFotoPerfil());
+            tokenUser.setFotoPerfil(imageName);
+        }
+
+        usuarioManager.update(tokenUser);
+        return new ResponseEntity<>("Foto subida correctamente", HttpStatus.OK);
+    }
+
+    @GetMapping("/admin/usuario/foto")
+    @Transactional
+    public ResponseEntity<String> getMyFoto(HttpServletRequest request) {
+
+        /*
+         * Cogemos el usuario del token, asi nos aseguramos de
+         * que el usuario que se modifica es a si mismo
+         * */
+        String token = request.getHeader("Authorization");
+        token = token.replace("Bearer ", "");
+        Usuario tokenUser = tokenManager.getUsuarioFromToken(token);
+
+        if (tokenUser.getFotoPerfil() == null || tokenUser.getFotoPerfil().equals("")) {
+            return new ResponseEntity<>("No tienes foto perfil", HttpStatus.BAD_REQUEST);
+        }
+        String url = amazonManager.getFile(tokenUser.getFotoPerfil());
+
+        return new ResponseEntity<>(url, HttpStatus.OK);
     }
 }
