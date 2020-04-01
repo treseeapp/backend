@@ -91,8 +91,9 @@ public class EmpresaController {
         String imageName = amazonManager.uploadFile(uploadfile);
         Empresa empresa = empresaManager.findById(id);
 
-       if (imageName != null && empresa.getFotoEmpresa()!=null) {
-           this.amazonManager.deletePicture(empresa.getFotoEmpresa());
+       if (imageName != null) {
+
+         // this.amazonManager.deletePicture(empresa.getFotoEmpresa());
             empresa.setFotoEmpresa(imageName);
         }
 
