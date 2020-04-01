@@ -89,10 +89,11 @@ public class EmpresaController {
     public ResponseEntity<String> saveMyFoto(@RequestPart(value = "file") final MultipartFile uploadfile, @PathVariable Long id, HttpServletRequest request) throws IOException {
 
         String imageName = amazonManager.uploadFile(uploadfile);
-        Empresa empresa=empresaManager.findById(id);
-        System.out.println(empresa.toString());
 
-        if (imageName != null) {
+        Empresa empresa = empresaManager.findById(id);
+        empresa.setFotoEmpresa(imageName);
+
+       if (imageName != null) {
             this.amazonManager.deletePicture(empresa.getFotoEmpresa());
             empresa.setFotoEmpresa(imageName);
         }
@@ -104,14 +105,16 @@ public class EmpresaController {
 
     @GetMapping("/admin/usuario/{id}foto")
     @Transactional
-    public ResponseEntity<String> getMyFoto(HttpServletRequest request) {
+    public ResponseEntity<String> getMyFoto(@PathVariable Long id, HttpServletRequest request) {
 
-        /*
-         * Cogemos el usuario del token, asi nos aseguramos de
-         * que el usuario que se modifica es a si mismo
-         * */
+        Empresa empresa = empresaManager.findById(id);
 
+        if (empresa.getFotoEmpresa() == null || empresa.getFotoEmpresa().equals("")) {
+            return new ResponseEntity<>("No tiene la empresa", HttpStatus.BAD_REQUEST);
+        }
 
-        return new ResponseEntity<>("url", HttpStatus.OK);
+        String url = amazonManager.getFile(empresa.getFotoEmpresa());
+
+        return new ResponseEntity<>(url, HttpStatus.OK);
     }
 }
