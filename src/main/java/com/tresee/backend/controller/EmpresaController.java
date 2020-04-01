@@ -2,6 +2,7 @@ package com.tresee.backend.controller;
 
 import com.tresee.backend.enitty.Empresa;
 import com.tresee.backend.enitty.Usuario;
+import com.tresee.backend.manager.AmazonManager;
 import com.tresee.backend.manager.EmpresaManager;
 import com.tresee.backend.manager.UsuarioManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,7 @@ public class EmpresaController {
     private EmpresaManager empresaManager;
 
     @Autowired
-    private UsuarioManager usuarioManager;
-
+    private AmazonManager amazonManager;
 
     @GetMapping("/admin/empresas")
     public List<Empresa> getEmpresas() {
@@ -86,28 +86,23 @@ public class EmpresaController {
 
     @PutMapping("/admin/empresas/{id}/foto")
     @Transactional
-    public ResponseEntity<String> saveMyFoto(@RequestPart(value = "file") final MultipartFile uploadfile, HttpServletRequest request) throws IOException {
-
-        /*
-         * Cogemos el id de la empresa para asignar esa imágen
-         * a la empresa
-         * */
-        String token = request.getHeader("Authorization");
-        token = token.replace("Bearer ", "");
-        Usuario tokenUser = tokenManager.getUsuarioFromToken(token);
+    public ResponseEntity<String> saveMyFoto(@RequestPart(value = "file") final MultipartFile uploadfile, @PathVariable Long id, HttpServletRequest request) throws IOException {
 
         String imageName = amazonManager.uploadFile(uploadfile);
+        Empresa empresa=empresaManager.findById(id);
+        System.out.println(empresa.toString());
 
         if (imageName != null) {
-            this.amazonManager.deletePicture(tokenUser.getFotoPerfil());
-            tokenUser.setFotoPerfil(imageName);
+            this.amazonManager.deletePicture(empresa.getFotoEmpresa());
+            empresa.setFotoEmpresa(imageName);
         }
 
-        usuarioManager.update(tokenUser);
+        empresaManager.update(empresa);
+
         return new ResponseEntity<>("Foto subida correctamente", HttpStatus.OK);
     }
 
-    @GetMapping("/admin/usuario/foto")
+    @GetMapping("/admin/usuario/{id}foto")
     @Transactional
     public ResponseEntity<String> getMyFoto(HttpServletRequest request) {
 
@@ -115,15 +110,8 @@ public class EmpresaController {
          * Cogemos el usuario del token, asi nos aseguramos de
          * que el usuario que se modifica es a si mismo
          * */
-        String token = request.getHeader("Authorization");
-        token = token.replace("Bearer ", "");
-        Usuario tokenUser = tokenManager.getUsuarioFromToken(token);
 
-        if (tokenUser.getFotoPerfil() == null || tokenUser.getFotoPerfil().equals("")) {
-            return new ResponseEntity<>("No tienes foto perfil", HttpStatus.BAD_REQUEST);
-        }
-        String url = amazonManager.getFile(tokenUser.getFotoPerfil());
 
-        return new ResponseEntity<>(url, HttpStatus.OK);
+        return new ResponseEntity<>("url", HttpStatus.OK);
     }
 }
