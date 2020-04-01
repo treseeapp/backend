@@ -1,9 +1,6 @@
 package com.tresee.backend.controller;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.tresee.backend.enitty.Empresa;
-import com.tresee.backend.enitty.Usuario;
 import com.tresee.backend.manager.EmpresaManager;
 import com.tresee.backend.manager.UsuarioManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,22 +20,10 @@ public class EmpresaController {
     @Autowired
     private UsuarioManager usuarioManager;
 
-    @Autowired
-    private Gson gson;
 
     @GetMapping("/admin/empresas")
     public List<Empresa> getEmpresas() {
         return this.empresaManager.getAll();
-    }
-
-    @GetMapping("/admin/estudiantes")
-    public List<Usuario> getEstudiantes() {
-        return this.usuarioManager.getAllEstudiantes();
-    }
-
-    @GetMapping("/admin/estudiantes/{id}")
-    public Usuario getEstudiante(@PathVariable Long id) {
-        return this.usuarioManager.findById(id);
     }
 
     @GetMapping("/admin/empresas/{id}")
@@ -86,11 +71,11 @@ public class EmpresaController {
     @Transactional
     public ResponseEntity<String> deleteEmpresa(@RequestBody String json) {
 
-        JsonObject jsonObject = gson.fromJson(json, JsonObject.class);
-        if (jsonObject.get("idempresa") != null) {
-            Empresa empresa = empresaManager.findById(jsonObject.get("idempresa").getAsLong());
-            empresaManager.delete(empresa);
-        }
+        Empresa empresa = empresaManager.fromJsonCreate(json);
+        if (empresa.getIdempresa() == null)
+            return new ResponseEntity<>("No se ha recibido ninung ID para eliminar", HttpStatus.BAD_REQUEST);
+        Empresa empresaABorrar = this.empresaManager.findById(empresa.getIdempresa());
+        this.empresaManager.delete(empresaABorrar);
 
         return new ResponseEntity<>("Empresa eliminada correctamente", HttpStatus.OK);
     }

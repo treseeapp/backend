@@ -1,6 +1,7 @@
 package com.tresee.backend.controller;
 
 import com.tresee.backend.enitty.Usuario;
+import com.tresee.backend.enitty.enums.Rol;
 import com.tresee.backend.manager.AmazonManager;
 import com.tresee.backend.manager.TokenManager;
 import com.tresee.backend.manager.UsuarioManager;
@@ -12,7 +13,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 public class UsuarioController {
@@ -119,5 +124,34 @@ public class UsuarioController {
         String url = amazonManager.getFile(tokenUser.getFotoPerfil());
 
         return new ResponseEntity<>(url, HttpStatus.OK);
+    }
+
+
+    /*
+     * ---------------
+     *
+     *  Administrados
+     *
+     * ---------------
+     * */
+
+    @GetMapping("/admin/estudiantes")
+    public List<Usuario> getAllStudents() {
+        List<Usuario> allUsers = this.usuarioManager.findAll();
+
+        Stream<Usuario> stream = allUsers.stream().filter(usuario -> usuario.getRol() == Rol.ESTUDIANTE);
+
+        return stream.collect(Collectors.toList());
+    }
+
+    @GetMapping("/admin/estudiantes/{id}")
+    public Usuario getSpecificStudent(@PathVariable Long id, HttpServletResponse response) throws IOException {
+
+        Usuario user = this.usuarioManager.findById(id);
+        if (user.getRol() != Rol.ESTUDIANTE) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Este usuario no es un estudiante");
+            return null;
+        }
+        return user;
     }
 }

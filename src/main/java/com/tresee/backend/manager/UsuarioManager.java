@@ -6,7 +6,6 @@ import com.tresee.backend.enitty.Empresa;
 import com.tresee.backend.enitty.Fichaje;
 import com.tresee.backend.enitty.Usuario;
 import com.tresee.backend.enitty.enums.Genero;
-import com.tresee.backend.enitty.enums.Rol;
 import com.tresee.backend.repository.EmpresaRepository;
 import com.tresee.backend.repository.FichajeRepository;
 import com.tresee.backend.repository.UsuarioRepository;
@@ -36,16 +35,6 @@ public class UsuarioManager {
         List<Usuario> toReturn = new LinkedList<>();
         for (Usuario user : usuarioRepository.findAll()) {
             toReturn.add(user);
-        }
-        return toReturn;
-    }
-
-    public List<Usuario> getAllEstudiantes() {
-        List<Usuario> toReturn = new LinkedList<>();
-        for (Usuario user : usuarioRepository.findAll()) {
-            if (user.getRol()== Rol.ESTUDIANTE){
-                toReturn.add(user);
-            }
         }
         return toReturn;
     }
