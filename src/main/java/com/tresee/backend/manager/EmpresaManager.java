@@ -68,7 +68,6 @@ public class EmpresaManager {
     }
 
     public Empresa findById(Long id) {
-        System.out.println(id);
         return this.empresaRepository.findByIdempresa(id);
     }
 

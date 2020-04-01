@@ -91,24 +91,24 @@ public class EmpresaController {
         String imageName = amazonManager.uploadFile(uploadfile);
         Empresa empresa = empresaManager.findById(id);
 
-       if (imageName != null) {
-           // this.amazonManager.deletePicture(empresa.getFotoEmpresa());
+       if (imageName != null && empresa.getFotoEmpresa()!=null) {
+           this.amazonManager.deletePicture(empresa.getFotoEmpresa());
             empresa.setFotoEmpresa(imageName);
         }
 
        empresaManager.update(empresa);
 
-        return new ResponseEntity<>("Foto subida correctamente", HttpStatus.OK);
+        return new ResponseEntity<>("Foto subida correctamente.", HttpStatus.OK);
     }
 
-    @GetMapping("/admin/usuario/{id}foto")
+    @GetMapping("/admin/empresas/{id}/foto")
     @Transactional
     public ResponseEntity<String> getMyFoto(@PathVariable Long id, HttpServletRequest request) {
 
         Empresa empresa = empresaManager.findById(id);
 
         if (empresa.getFotoEmpresa() == null || empresa.getFotoEmpresa().equals("")) {
-            return new ResponseEntity<>("No tiene la empresa", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("La empresa no tiene foto.", HttpStatus.BAD_REQUEST);
         }
 
         String url = amazonManager.getFile(empresa.getFotoEmpresa());
