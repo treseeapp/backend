@@ -46,7 +46,9 @@ public class UsuarioManager {
     public List<Usuario> getAllEstudiantes() {
         List<Usuario> toReturn = new LinkedList<>();
         for (Usuario user : usuarioRepository.findAll()) {
-            toReturn.add(user);
+            if (user.getRol()== Rol.ESTUDIANTE){
+                toReturn.add(user);
+            }
         }
         return toReturn;
     }
