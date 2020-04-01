@@ -37,6 +37,11 @@ public class EmpresaController {
         return this.usuarioManager.getAllEstudiantes();
     }
 
+    @GetMapping("/admin/estudiantes/{id}")
+    public Usuario getEstudiante(@PathVariable Long id) {
+        return this.usuarioManager.findById(id);
+    }
+
     @GetMapping("/admin/empresas/{id}")
     public Empresa getEmpresas(@PathVariable Long id) {
         return this.empresaManager.findById(id);
@@ -78,7 +83,6 @@ public class EmpresaController {
         empresaManager.update(empresaToModify);
         return new ResponseEntity<>("Empresa modificada correctamente", HttpStatus.OK);
     }
-
 
     @DeleteMapping("/admin/empresas")
     @Transactional

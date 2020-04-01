@@ -45,7 +45,6 @@ public class UsuarioController {
         String token = request.getHeader("Authorization");
         token = token.replace("Bearer ", "");
         Usuario tokenUser = tokenManager.getUsuarioFromToken(token);
-
         Usuario recivedInfo = usuarioManager.fromJson(json);
 
         /*
