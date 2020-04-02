@@ -58,7 +58,7 @@ public class Usuario {
     @JoinColumn(foreignKey = @ForeignKey(name = "empresa_idempresa"), name = "empresa_idempresa")
     private Empresa empresa;
 
-    @OneToMany(mappedBy = "usuario", orphanRemoval = false, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "usuario", orphanRemoval = true, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Fichaje> fichajes;
 
 
@@ -171,6 +171,10 @@ public class Usuario {
 
     public void setFichajes(List<Fichaje> fichajes) {
         this.fichajes = fichajes;
+    }
+
+    public void addFichaje(Fichaje fichaje) {
+        this.fichajes.add(fichaje);
     }
 
     @Override
