@@ -53,15 +53,16 @@ public class UsuarioController {
         Usuario recivedInfo = usuarioManager.fromJson(json);
 
         /*
-        * Antes de modificar nada,
-        * comprobamos que entre los campos recibidos
-        * se encuentrar los obligatorios
-        * */
-        if (recivedInfo.getNombre()==null) return new ResponseEntity<>("No se ha recibido ningun nombre", HttpStatus.BAD_REQUEST);
+         * Antes de modificar nada,
+         * comprobamos que entre los campos recibidos
+         * se encuentrar los obligatorios
+         * */
+        if (recivedInfo.getNombre() == null)
+            return new ResponseEntity<>("No se ha recibido ningun nombre", HttpStatus.BAD_REQUEST);
 
         /*
-        * Todos los campos recibidos estan OK
-        * */
+         * Todos los campos recibidos estan OK
+         * */
         tokenUser.setNombre(recivedInfo.getNombre());
         tokenUser.setApellidos(recivedInfo.getApellidos());
         tokenUser.setDireccion(recivedInfo.getDireccion());
@@ -98,7 +99,8 @@ public class UsuarioController {
         String imageName = amazonManager.uploadFile(uploadfile);
 
         if (imageName != null) {
-            this.amazonManager.deletePicture(tokenUser.getFotoPerfil());
+            if (tokenUser.getFotoPerfil() != null && !tokenUser.getFotoPerfil().equals(""))
+                this.amazonManager.deletePicture(tokenUser.getFotoPerfil());
             tokenUser.setFotoPerfil(imageName);
         }
 

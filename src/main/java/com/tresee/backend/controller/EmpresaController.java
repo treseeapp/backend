@@ -10,8 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -84,25 +82,25 @@ public class EmpresaController {
 
     @PutMapping("/admin/empresas/{id}/foto")
     @Transactional
-    public ResponseEntity<String> saveMyFoto(@RequestPart(value = "file") final MultipartFile uploadfile, @PathVariable Long id, HttpServletRequest request) throws IOException {
+    public ResponseEntity<String> saveCompanyFoto(@RequestPart(value = "file") final MultipartFile uploadfile, @PathVariable Long id) {
 
         String imageName = amazonManager.uploadFile(uploadfile);
         Empresa empresa = empresaManager.findById(id);
 
-       if (imageName != null) {
+        if (imageName != null) {
 
-         // this.amazonManager.deletePicture(empresa.getFotoEmpresa());
+            if (empresa.getFotoEmpresa() != null && !empresa.getFotoEmpresa().equals(""))
+                this.amazonManager.deletePicture(empresa.getFotoEmpresa());
             empresa.setFotoEmpresa(imageName);
         }
 
-       empresaManager.update(empresa);
-
+        empresaManager.update(empresa);
         return new ResponseEntity<>("Foto subida correctamente.", HttpStatus.OK);
     }
 
     @GetMapping("/admin/empresas/{id}/foto")
     @Transactional
-    public ResponseEntity<String> getMyFoto(@PathVariable Long id, HttpServletRequest request) {
+    public ResponseEntity<String> getCompanyFoto(@PathVariable Long id) {
 
         Empresa empresa = empresaManager.findById(id);
 
@@ -111,7 +109,6 @@ public class EmpresaController {
         }
 
         String url = amazonManager.getFile(empresa.getFotoEmpresa());
-
         return new ResponseEntity<>(url, HttpStatus.OK);
     }
 }
