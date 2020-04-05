@@ -99,4 +99,18 @@ public class Empresa {
     public void setDireccion(String direccion) {
         this.direccion = direccion;
     }
+
+    @Override
+    public String toString() {
+        return "Empresa{" +
+                "idempresa=" + idempresa +
+                ", nombre='" + nombre + '\'' +
+                ", contacto='" + contacto + '\'' +
+                ", inicioPracticas=" + inicioPracticas +
+                ", direccion='" + direccion + '\'' +
+                ", fotoEmpresa='" + fotoEmpresa + '\'' +
+                ", empresaTieneDias=" + empresaTieneDias +
+                ", estudiantes=" + estudiantes +
+                '}';
+    }
 }

@@ -1,8 +1,11 @@
 package com.tresee.backend.controller;
 
 import com.tresee.backend.enitty.Empresa;
+import com.tresee.backend.enitty.Usuario;
+import com.tresee.backend.enitty.enums.Rol;
 import com.tresee.backend.manager.AmazonManager;
 import com.tresee.backend.manager.EmpresaManager;
+import com.tresee.backend.manager.UsuarioManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +20,9 @@ public class EmpresaController {
 
     @Autowired
     private EmpresaManager empresaManager;
+
+    @Autowired
+    private UsuarioManager usuarioManager;
 
     @Autowired
     private AmazonManager amazonManager;
@@ -110,5 +116,42 @@ public class EmpresaController {
 
         String url = amazonManager.getFile(empresa.getFotoEmpresa());
         return new ResponseEntity<>(url, HttpStatus.OK);
+    }
+
+    @PostMapping("/admin/empresas/vincular/user")
+    @Transactional
+    public ResponseEntity<String> vinculateUser(@RequestBody String json) {
+        Empresa empresa = this.empresaManager.fromJsonCreate(json);
+        Usuario usuario = this.usuarioManager.fromJson(json);
+        empresa = this.empresaManager.findById(empresa.getIdempresa());
+        usuario = this.usuarioManager.findById(usuario.getIdusuario());
+
+        if (empresa == null) return new ResponseEntity<>("Empresa no existente", HttpStatus.BAD_REQUEST);
+        if (usuario == null) return new ResponseEntity<>("Usuario no existente", HttpStatus.BAD_REQUEST);
+        if (usuario.getRol() != Rol.ESTUDIANTE)
+            return new ResponseEntity<>("Solo se puede vincular a un estudiante con una empresa", HttpStatus.BAD_REQUEST);
+
+        usuario.setEmpresa(empresa);
+        this.usuarioManager.update(usuario);
+
+        return new ResponseEntity<>("Usuario vinculado correctamente", HttpStatus.OK);
+    }
+
+    @DeleteMapping("/admin/empresas/vincular/user")
+    @Transactional
+    public ResponseEntity<String> desvincularUsuario(@RequestBody String json) {
+        Usuario usuario = this.usuarioManager.fromJson(json);
+        usuario = this.usuarioManager.findById(usuario.getIdusuario());
+
+        if (usuario == null) return new ResponseEntity<>("Usuario no existe", HttpStatus.BAD_REQUEST);
+        if (usuario.getRol() != Rol.ESTUDIANTE)
+            return new ResponseEntity<>("El usuario no es un estudiante, con lo cual no esta vinculado a ninguna empresa", HttpStatus.BAD_REQUEST);
+        if (usuario.getEmpresa() == null)
+            return new ResponseEntity<>("El usuario no tiene empresa", HttpStatus.BAD_REQUEST);
+
+        usuario.setEmpresa(null);
+        this.usuarioManager.update(usuario);
+
+        return new ResponseEntity<>("Usuario desvinculado correctamente", HttpStatus.OK);
     }
 }

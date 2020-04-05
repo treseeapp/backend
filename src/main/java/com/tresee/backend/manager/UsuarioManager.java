@@ -43,8 +43,8 @@ public class UsuarioManager {
         return usuarioRepository.findByIdusuario(id);
     }
 
-    public Usuario findByEmail(Long id) {
-        return usuarioRepository.findByIdusuario(id);
+    public Usuario findByEmail(String email) {
+        return usuarioRepository.findByEmail(email);
     }
 
     public void update(Usuario user) {
@@ -81,6 +81,9 @@ public class UsuarioManager {
     public Usuario fromJson(String json) {
         Usuario user = new Usuario();
         JsonObject jsonObject = gson.fromJson(json, JsonObject.class);
+        if (jsonObject.get("idusuario") != null) {
+            user.setIdusuario(jsonObject.get("idusuario").getAsLong());
+        }
         if (jsonObject.get("nombre") != null) {
             user.setNombre(jsonObject.get("nombre").getAsString());
         }
