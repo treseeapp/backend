@@ -1,8 +1,10 @@
 package com.tresee.backend.enitty;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Time;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "empresa_has_dia")
@@ -14,6 +16,7 @@ public class EmpresaTieneDia implements Serializable {
     @Column(name = "idempresa_tiene_dia")
     private Long idempresa_tiene_dia;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "empresa_idempresa")
     private Empresa empresa;
@@ -23,10 +26,10 @@ public class EmpresaTieneDia implements Serializable {
     private Dia dia;
 
     @Column(name = "hora_entrada", columnDefinition = "TIME")
-    private Time horaEntrada;
+    private LocalTime horaEntrada;
 
     @Column(name = "hora_salida", columnDefinition = "TIME")
-    private Time horaSalida;
+    private LocalTime horaSalida;
 
     public EmpresaTieneDia() {
     }
@@ -51,19 +54,27 @@ public class EmpresaTieneDia implements Serializable {
         this.dia = dia;
     }
 
-    public Time getHoraEntrada() {
+    public Long getIdempresa_tiene_dia() {
+        return idempresa_tiene_dia;
+    }
+
+    public void setIdempresa_tiene_dia(Long idempresa_tiene_dia) {
+        this.idempresa_tiene_dia = idempresa_tiene_dia;
+    }
+
+    public LocalTime getHoraEntrada() {
         return horaEntrada;
     }
 
-    public void setHoraEntrada(Time horaEntrada) {
+    public void setHoraEntrada(LocalTime horaEntrada) {
         this.horaEntrada = horaEntrada;
     }
 
-    public Time getHoraSalida() {
+    public LocalTime getHoraSalida() {
         return horaSalida;
     }
 
-    public void setHoraSalida(Time horaSalida) {
+    public void setHoraSalida(LocalTime horaSalida) {
         this.horaSalida = horaSalida;
     }
 }
