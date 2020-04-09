@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class HorarioManager {
@@ -27,6 +29,14 @@ public class HorarioManager {
     @Autowired
     private EmpresaTieneDiaRepository empresaTieneDiaRepository;
 
+
+    private static final String TIME24HOURS_PATTERN = "([01]?[0-9]|2[0-3]):[0-5][0-9]";
+    private Pattern pattern;
+
+    public HorarioManager() {
+        this.pattern = Pattern.compile(TIME24HOURS_PATTERN);
+    }
+
     public void guardarHorario(EmpresaTieneDia horario) {
         this.empresaTieneDiaRepository.save(horario);
     }
@@ -36,6 +46,7 @@ public class HorarioManager {
     }
 
     public EmpresaTieneDia fromJson(String json) {
+        Matcher matcher;
         EmpresaTieneDia horario = new EmpresaTieneDia();
         JsonObject jsonObject = gson.fromJson(json, JsonObject.class);
         if (jsonObject.get("idempresa") != null) {
@@ -48,17 +59,27 @@ public class HorarioManager {
 
         if (jsonObject.get("horaEntrada") != null) {
             String time = jsonObject.get("horaEntrada").getAsString();
-            if (!time.equals("")) {
+            matcher = pattern.matcher(time);
+            if (!time.equals("") && matcher.matches()) {
                 horario.setHoraEntrada(LocalTime.parse(time));
             }
         }
         if (jsonObject.get("horaSalida") != null) {
             String time = jsonObject.get("horaSalida").getAsString();
-            if (!time.equals("")) {
+            matcher = pattern.matcher(time);
+            if (!time.equals("") && matcher.matches()) {
                 horario.setHoraSalida(LocalTime.parse(time));
             }
         }
 
         return horario;
+    }
+
+    public void update(EmpresaTieneDia horario) {
+        this.empresaTieneDiaRepository.save(horario);
+    }
+
+    public void delete(EmpresaTieneDia toDelete) {
+        this.empresaTieneDiaRepository.delete(toDelete);
     }
 }
