@@ -1,6 +1,7 @@
 package com.tresee.backend.enitty;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tresee.backend.enitty.enums.DiaDeLaSemana;
 
 import javax.persistence.*;
@@ -18,6 +19,7 @@ public class Dia {
     private DiaDeLaSemana dia;
 
     /*TODO Check que este correcto*/
+    @JsonIgnore
     @OneToMany(mappedBy = "dia", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<EmpresaTieneDia> intermedia;
 

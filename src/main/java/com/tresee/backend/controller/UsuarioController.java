@@ -170,4 +170,24 @@ public class UsuarioController {
         return new ResponseEntity<>(url, HttpStatus.OK);
     }
 
+    @PostMapping("/admin/usuario/convert/profesor")
+    @Transactional
+    public ResponseEntity<String> modifyToTeacher(@RequestBody String json) {
+        Usuario user = this.usuarioManager.fromJson(json);
+
+        if (user.getIdusuario() == null)
+            return new ResponseEntity<>("Necesitamos recibir el id del usuario que quieres convertir", HttpStatus.BAD_REQUEST);
+
+        Usuario userToModify = this.usuarioManager.findById(user.getIdusuario());
+
+        if (userToModify == null)
+            return new ResponseEntity<>("Usuario con id(" + user.getIdusuario() + ") no existente", HttpStatus.BAD_REQUEST);
+        if (userToModify.getRol() != Rol.ESTUDIANTE)
+            return new ResponseEntity<>("El usuario que quieres convertir a profesor ha de ser un estudiante", HttpStatus.BAD_REQUEST);
+
+        userToModify.setRol(Rol.PROFESOR);
+        this.usuarioManager.update(userToModify);
+        return new ResponseEntity<>("Usuario convertido a profesor", HttpStatus.OK);
+    }
+
 }
