@@ -34,6 +34,9 @@ public class AmazonManager {
     private String accessKey;
     @Value("${amazon.secretKey}")
     private String secretKey;
+    @Value("upload.directory")
+    private String path;
+
 
     @PostConstruct
     private void initializeAmazon() {
@@ -74,7 +77,7 @@ public class AmazonManager {
          * Volvemos a juntar las partes del archivo ya que desde el
          * cliente nos llega en partes
          * */
-        File convFile = new File("/var/lib/tomcat8/uploads"+file.getOriginalFilename());
+        File convFile = new File(path+file.getOriginalFilename());
         FileOutputStream fos = new FileOutputStream(convFile);
         fos.write(file.getBytes());
         fos.close();
