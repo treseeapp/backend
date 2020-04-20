@@ -15,7 +15,7 @@ public class Dia {
     @Column(name = "iddia")
     private Long iddia;
 
-    @Column(name = "nombre", nullable = false)
+    @Column(name = "nombre", nullable = false, columnDefinition = "tinyint")
     private DiaDeLaSemana dia;
 
     /*TODO Check que este correcto*/

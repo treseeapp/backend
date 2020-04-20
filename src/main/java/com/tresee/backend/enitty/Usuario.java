@@ -37,16 +37,16 @@ public class Usuario {
     @Column(name = "contraseña", length = 300, nullable = false)
     private String contraseña;
 
-    @Column(name = "rol", nullable = false)
+    @Column(name = "rol", nullable = false, columnDefinition = "tinyint")
     private Rol rol;
 
-    @Column(name = "genero")
+    @Column(name = "genero", columnDefinition = "tinyint")
     private Genero genero;
 
     /*
      * Local - Google - Facebook ......
      * */
-    @Column(name = "modo_inicio_sesion")
+    @Column(name = "modo_inicio_sesion", columnDefinition = "tinyint")
     private ModoInicioSesion modoInicioSesion;
 
     @Column(name = "foto_perfil")
