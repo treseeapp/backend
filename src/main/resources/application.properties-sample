@@ -45,3 +45,9 @@ amazon.secretKey=
 
 # Nombre del bucket de Amazon
 amazon.bucketName=
+
+# TAMAÑO MAX DE IMAGENES QUE SE PUEDEN HACER UPLOAD
+multipart.max-file-size=10MB
+multipart.max-request-size=10MB
+spring.servlet.multipart.max-file-size=10MB
+spring.servlet.multipart.max-request-size=10MB
