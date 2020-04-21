@@ -1,10 +1,12 @@
 package com.tresee.backend.controller;
 
 import com.tresee.backend.enitty.Empresa;
+import com.tresee.backend.enitty.EmpresaTieneDia;
 import com.tresee.backend.enitty.Usuario;
 import com.tresee.backend.enitty.enums.Rol;
 import com.tresee.backend.manager.AmazonManager;
 import com.tresee.backend.manager.EmpresaManager;
+import com.tresee.backend.manager.TokenManager;
 import com.tresee.backend.manager.UsuarioManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.LinkedList;
 import java.util.List;
 
 @RestController
@@ -27,9 +31,51 @@ public class EmpresaController {
     @Autowired
     private AmazonManager amazonManager;
 
+    @Autowired
+    private TokenManager tokenManager;
+
     @GetMapping("/admin/empresas")
     public List<Empresa> getEmpresas() {
         return this.empresaManager.getAll();
+    }
+
+    @GetMapping("/private/my/empresa")
+    public Empresa getMyEmpresa(HttpServletRequest request) {
+        Empresa toReturn = new Empresa();
+
+        Empresa empresaOriginal = empresaManager.findById(2L);
+
+        toReturn.setNombre(empresaOriginal.getNombre());
+        toReturn.setContacto(empresaOriginal.getContacto());
+        toReturn.setDireccion(empresaOriginal.getDireccion());
+
+
+        List<Usuario> estudiantes = new LinkedList<>();
+
+        System.out.println(empresaOriginal.getEstudiantes().size());
+        for (Usuario user : empresaOriginal.getEstudiantes()) {
+            Usuario toAdd = new Usuario();
+            toAdd.setNombre(user.getNombre());
+            toAdd.setApellidos(user.getApellidos());
+            estudiantes.add(toAdd);
+        }
+        toReturn.setEstudiantes(estudiantes);
+
+
+        List<EmpresaTieneDia> horarios = new LinkedList<>();
+        for (EmpresaTieneDia horario : empresaOriginal.getEmpresaTieneDias()) {
+            EmpresaTieneDia toAdd = new EmpresaTieneDia();
+            toAdd.setDia(horario.getDia());
+            toAdd.setHoraEntrada(horario.getHoraEntrada());
+            toAdd.setHoraSalida(horario.getHoraSalida());
+
+            horarios.add(toAdd);
+        }
+        toReturn.setEmpresaTieneDias(horarios);
+
+        toReturn.setFotoEmpresa(amazonManager.getFile(empresaOriginal.getFotoEmpresa()));
+        return toReturn;
+
     }
 
     @GetMapping("/admin/empresas/{id}")

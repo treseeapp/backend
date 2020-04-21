@@ -52,8 +52,7 @@ public class Usuario {
     @Column(name = "foto_perfil")
     private String fotoPerfil;
 
-    /*TODO Check que este correcto*/
-    @JsonIgnore // Mirar si nos interesa
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "empresa_idempresa"), name = "empresa_idempresa")
     private Empresa empresa;
