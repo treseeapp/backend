@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class EmpresaManager {
@@ -76,7 +77,7 @@ public class EmpresaManager {
     }
 
     public void delete(Empresa empresa) {
-        List<Usuario> listadoUsuarios = empresa.getEstudiantes();
+        Set<Usuario> listadoUsuarios = empresa.getEstudiantes();
         for (Usuario user : listadoUsuarios) {
             user.setEmpresa(null);
             usuarioRepository.save(user);

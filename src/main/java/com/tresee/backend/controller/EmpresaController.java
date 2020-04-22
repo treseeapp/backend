@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 public class EmpresaController {
@@ -42,17 +44,22 @@ public class EmpresaController {
     @GetMapping("/private/my/empresa")
     public Empresa getMyEmpresa(HttpServletRequest request) {
         Empresa toReturn = new Empresa();
+        String token = request.getHeader("Authorization");
+        token = token.replace("Bearer ", "");
+        Usuario tokenUser = tokenManager.getUsuarioFromToken(token);
 
-        Empresa empresaOriginal = empresaManager.findById(2L);
+        Empresa empresaOriginal = tokenUser.getEmpresa();
+
+        if (empresaOriginal == null) {
+            return toReturn;
+        }
 
         toReturn.setNombre(empresaOriginal.getNombre());
         toReturn.setContacto(empresaOriginal.getContacto());
         toReturn.setDireccion(empresaOriginal.getDireccion());
 
 
-        List<Usuario> estudiantes = new LinkedList<>();
-
-        System.out.println(empresaOriginal.getEstudiantes().size());
+        Set<Usuario> estudiantes = new HashSet<>();
         for (Usuario user : empresaOriginal.getEstudiantes()) {
             Usuario toAdd = new Usuario();
             toAdd.setNombre(user.getNombre());
@@ -75,7 +82,6 @@ public class EmpresaController {
 
         toReturn.setFotoEmpresa(amazonManager.getFile(empresaOriginal.getFotoEmpresa()));
         return toReturn;
-
     }
 
     @GetMapping("/admin/empresas/{id}")
