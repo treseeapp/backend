@@ -31,12 +31,13 @@ public class UsuarioController {
     private AmazonManager amazonManager;
 
     @GetMapping("/private/usuario")
-    @Transactional
     public Usuario getMyInfo(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
         token = token.replace("Bearer ", "");
+        Usuario user = tokenManager.getUsuarioFromToken(token);
 
-        return tokenManager.getUsuarioFromToken(token);
+        user.setFotoPerfil(this.amazonManager.getFile(user.getFotoPerfil()));
+        return user;
     }
 
     @PutMapping("/private/usuario")
@@ -136,14 +137,16 @@ public class UsuarioController {
      *
      * ---------------
      * */
-
     @GetMapping("/admin/estudiantes")
     public List<Usuario> getAllStudents() {
         List<Usuario> allUsers = this.usuarioManager.findAll();
 
         Stream<Usuario> stream = allUsers.stream().filter(usuario -> usuario.getRol() == Rol.ESTUDIANTE);
-
-        return stream.collect(Collectors.toList());
+        List<Usuario> users = stream.collect(Collectors.toList());
+        users.forEach(usuario -> {
+            usuario.setFotoPerfil(this.amazonManager.getFile(usuario.getFotoPerfil()));
+        });
+        return users;
     }
 
     @GetMapping("/admin/estudiantes/{id}")
@@ -154,6 +157,7 @@ public class UsuarioController {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Este usuario no es un estudiante");
             return null;
         }
+        user.setFotoPerfil(this.amazonManager.getFile(user.getFotoPerfil()));
         return user;
     }
 

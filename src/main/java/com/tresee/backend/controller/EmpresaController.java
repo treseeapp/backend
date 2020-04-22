@@ -38,6 +38,9 @@ public class EmpresaController {
 
     @GetMapping("/admin/empresas")
     public List<Empresa> getEmpresas() {
+        for (Empresa company : this.empresaManager.getAll()) {
+            company.setFotoEmpresa(this.amazonManager.getFile(company.getFotoEmpresa()));
+        }
         return this.empresaManager.getAll();
     }
 
@@ -86,7 +89,9 @@ public class EmpresaController {
 
     @GetMapping("/admin/empresas/{id}")
     public Empresa getEmpresas(@PathVariable Long id) {
-        return this.empresaManager.findById(id);
+        Empresa company = this.empresaManager.findById(id);
+        company.setFotoEmpresa(this.amazonManager.getFile(company.getFotoEmpresa()));
+        return company;
     }
 
     @PostMapping("/admin/empresas")
@@ -154,20 +159,6 @@ public class EmpresaController {
 
         empresaManager.update(empresa);
         return new ResponseEntity<>("Foto subida correctamente.", HttpStatus.OK);
-    }
-
-    @GetMapping("/admin/empresas/{id}/foto")
-    @Transactional
-    public ResponseEntity<String> getCompanyFoto(@PathVariable Long id) {
-
-        Empresa empresa = empresaManager.findById(id);
-
-        if (empresa.getFotoEmpresa() == null || empresa.getFotoEmpresa().equals("")) {
-            return new ResponseEntity<>("La empresa no tiene foto.", HttpStatus.BAD_REQUEST);
-        }
-
-        String url = amazonManager.getFile(empresa.getFotoEmpresa());
-        return new ResponseEntity<>(url, HttpStatus.OK);
     }
 
     @PostMapping("/admin/empresas/vincular/user")

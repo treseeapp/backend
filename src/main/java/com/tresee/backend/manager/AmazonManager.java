@@ -34,7 +34,7 @@ public class AmazonManager {
     private String accessKey;
     @Value("${amazon.secretKey}")
     private String secretKey;
-    @Value("upload.directory")
+    @Value("${upload.directory}")
     private String path;
 
 
