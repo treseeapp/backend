@@ -14,6 +14,7 @@ pipeline {
     stage('Compilamos') {
       steps {
         sh  '''
+            export MAVEN_OPTS="-Xmx3000m"
             echo "Compilamos "
             mvn -X package
             '''
