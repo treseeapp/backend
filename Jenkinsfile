@@ -41,6 +41,9 @@ pipeline {
         steps  {
             sh  '''
                 echo "Desplegamos la imagen docker creada"
+                docker stop java
+                docker container rm java
+                docker run -d --name java --network host back-java
                 '''
         }
     }
