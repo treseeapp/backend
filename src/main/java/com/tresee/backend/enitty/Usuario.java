@@ -37,23 +37,22 @@ public class Usuario {
     @Column(name = "contraseña", length = 300, nullable = false)
     private String contraseña;
 
-    @Column(name = "rol", nullable = false)
+    @Column(name = "rol", nullable = false, columnDefinition = "tinyint")
     private Rol rol;
 
-    @Column(name = "genero")
+    @Column(name = "genero", columnDefinition = "tinyint")
     private Genero genero;
 
     /*
      * Local - Google - Facebook ......
      * */
-    @Column(name = "modo_inicio_sesion")
+    @Column(name = "modo_inicio_sesion", columnDefinition = "tinyint")
     private ModoInicioSesion modoInicioSesion;
 
     @Column(name = "foto_perfil")
     private String fotoPerfil;
 
-    /*TODO Check que este correcto*/
-    @JsonIgnore // Mirar si nos interesa
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "empresa_idempresa"), name = "empresa_idempresa")
     private Empresa empresa;

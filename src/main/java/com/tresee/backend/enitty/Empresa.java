@@ -3,6 +3,7 @@ package com.tresee.backend.enitty;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "empresa")
@@ -32,7 +33,7 @@ public class Empresa {
     private List<EmpresaTieneDia> empresaTieneDias;
 
     @OneToMany(mappedBy = "empresa", orphanRemoval = false, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<Usuario> estudiantes;
+    private Set<Usuario> estudiantes;
 
     public Empresa() {
     }
@@ -84,11 +85,11 @@ public class Empresa {
         this.empresaTieneDias = empresaTieneDias;
     }
 
-    public List<Usuario> getEstudiantes() {
+    public Set<Usuario> getEstudiantes() {
         return estudiantes;
     }
 
-    public void setEstudiantes(List<Usuario> estudiantes) {
+    public void setEstudiantes(Set<Usuario> estudiantes) {
         this.estudiantes = estudiantes;
     }
 

@@ -1,10 +1,12 @@
 package com.tresee.backend.controller;
 
 import com.tresee.backend.enitty.Empresa;
+import com.tresee.backend.enitty.EmpresaTieneDia;
 import com.tresee.backend.enitty.Usuario;
 import com.tresee.backend.enitty.enums.Rol;
 import com.tresee.backend.manager.AmazonManager;
 import com.tresee.backend.manager.EmpresaManager;
+import com.tresee.backend.manager.TokenManager;
 import com.tresee.backend.manager.UsuarioManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,7 +15,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 public class EmpresaController {
@@ -27,14 +33,65 @@ public class EmpresaController {
     @Autowired
     private AmazonManager amazonManager;
 
+    @Autowired
+    private TokenManager tokenManager;
+
     @GetMapping("/admin/empresas")
     public List<Empresa> getEmpresas() {
+        for (Empresa company : this.empresaManager.getAll()) {
+            company.setFotoEmpresa(this.amazonManager.getFile(company.getFotoEmpresa()));
+        }
         return this.empresaManager.getAll();
+    }
+
+    @GetMapping("/private/my/empresa")
+    public Empresa getMyEmpresa(HttpServletRequest request) {
+        Empresa toReturn = new Empresa();
+        String token = request.getHeader("Authorization");
+        token = token.replace("Bearer ", "");
+        Usuario tokenUser = tokenManager.getUsuarioFromToken(token);
+
+        Empresa empresaOriginal = tokenUser.getEmpresa();
+
+        if (empresaOriginal == null) {
+            return toReturn;
+        }
+
+        toReturn.setNombre(empresaOriginal.getNombre());
+        toReturn.setContacto(empresaOriginal.getContacto());
+        toReturn.setDireccion(empresaOriginal.getDireccion());
+
+
+        Set<Usuario> estudiantes = new HashSet<>();
+        for (Usuario user : empresaOriginal.getEstudiantes()) {
+            Usuario toAdd = new Usuario();
+            toAdd.setNombre(user.getNombre());
+            toAdd.setApellidos(user.getApellidos());
+            estudiantes.add(toAdd);
+        }
+        toReturn.setEstudiantes(estudiantes);
+
+
+        List<EmpresaTieneDia> horarios = new LinkedList<>();
+        for (EmpresaTieneDia horario : empresaOriginal.getEmpresaTieneDias()) {
+            EmpresaTieneDia toAdd = new EmpresaTieneDia();
+            toAdd.setDia(horario.getDia());
+            toAdd.setHoraEntrada(horario.getHoraEntrada());
+            toAdd.setHoraSalida(horario.getHoraSalida());
+
+            horarios.add(toAdd);
+        }
+        toReturn.setEmpresaTieneDias(horarios);
+
+        toReturn.setFotoEmpresa(amazonManager.getFile(empresaOriginal.getFotoEmpresa()));
+        return toReturn;
     }
 
     @GetMapping("/admin/empresas/{id}")
     public Empresa getEmpresas(@PathVariable Long id) {
-        return this.empresaManager.findById(id);
+        Empresa company = this.empresaManager.findById(id);
+        company.setFotoEmpresa(this.amazonManager.getFile(company.getFotoEmpresa()));
+        return company;
     }
 
     @PostMapping("/admin/empresas")
@@ -102,20 +159,6 @@ public class EmpresaController {
 
         empresaManager.update(empresa);
         return new ResponseEntity<>("Foto subida correctamente.", HttpStatus.OK);
-    }
-
-    @GetMapping("/admin/empresas/{id}/foto")
-    @Transactional
-    public ResponseEntity<String> getCompanyFoto(@PathVariable Long id) {
-
-        Empresa empresa = empresaManager.findById(id);
-
-        if (empresa.getFotoEmpresa() == null || empresa.getFotoEmpresa().equals("")) {
-            return new ResponseEntity<>("La empresa no tiene foto.", HttpStatus.BAD_REQUEST);
-        }
-
-        String url = amazonManager.getFile(empresa.getFotoEmpresa());
-        return new ResponseEntity<>(url, HttpStatus.OK);
     }
 
     @PostMapping("/admin/empresas/vincular/user")
