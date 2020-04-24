@@ -33,9 +33,6 @@ pipeline {
     }
 
     stage('Deploying image docker'){
-        when{
-            branch 'Produccion'
-        }
         steps  {
             sh  '''
                 echo "Desplegamos la imagen docker creada"
