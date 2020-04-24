@@ -7,7 +7,6 @@ pipeline {
                  pwd
                  cp /jenkinsCredentials/application.properties src/main/resources/application.properties
                  ls -la src/main/resources
-
             '''
       }
     }
@@ -16,6 +15,7 @@ pipeline {
       steps {
         sh  '''
             echo "Compilamos "
+            mvn package
             '''
       }
     }
