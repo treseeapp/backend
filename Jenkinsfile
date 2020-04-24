@@ -15,7 +15,7 @@ pipeline {
       steps {
         sh  '''
             echo "Compilamos "
-            mvn package
+            mvn -X package
             '''
       }
     }
