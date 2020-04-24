@@ -4,6 +4,8 @@ pipeline {
     stage('Instalamos dependencias') {
       steps {
         sh  '''  echo "Instalamos dependencias"
+                 pwd
+                 ls -la
             '''
       }
     }
