@@ -16,22 +16,20 @@ pipeline {
         sh  '''
             echo "Compilamos "
             mvn package
-
             '''
       }
     }
-
     stage('Construimos la imagen docker') {
-      when{
-        branch 'Produccion'
-      }
-      steps {
-        sh  '''
-            echo "Contruimos la imagen docker"
-            mv ./target/app.war ./app.war
-            docker build -t back-java .
-            '''
-      }
+            when{
+                branch 'Produccion'
+            }
+            steps {
+                sh  '''
+                    echo "Contruimos la imagen docker"
+                    mv ./target/app.war ./app.war
+                    docker build -t back-java .
+                    '''
+            }
     }
 
     stage('Deploying image docker'){
