@@ -38,7 +38,7 @@ pipeline {
                 echo "Desplegamos la imagen docker creada"
                 docker stop java
                 docker container rm java
-                docker run -d --name java --network host -p 8081:8080 back-java
+                docker run -d --name java --network host back-java
                 '''
         }
     }
