@@ -5,7 +5,7 @@ pipeline {
       steps {
         sh  '''  echo "Instalamos dependencias"
                  pwd
-                 ls -la
+                 ls -la /jenkinsCredenciales
             '''
       }
     }
