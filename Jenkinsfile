@@ -27,6 +27,7 @@ pipeline {
       steps {
         sh  '''
             echo "Contruimos la imagen docker"
+            docker build -t back-java .
             '''
       }
     }
