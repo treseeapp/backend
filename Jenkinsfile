@@ -22,9 +22,7 @@ pipeline {
     }
 
     stage('Construimos la imagen docker') {
-      when{
-        branch 'Produccion'
-      }
+
       steps {
         sh  '''
             echo "Contruimos la imagen docker"
