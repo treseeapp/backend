@@ -26,7 +26,7 @@ pipeline {
             steps {
                 sh  '''
                     echo "Contruimos la imagen docker"
-                    mv ./target/app.war ./app.war
+                    cp ./target/app.war ./app.war
                     docker build -t back-java .
                     '''
             }
