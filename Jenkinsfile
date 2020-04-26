@@ -53,9 +53,8 @@ pipeline {
         steps  {
         sh  '''
             echo "subimos a docker hub"
-            docker tag back-java tresee/back-java:latest
-            docker login --username=tresee -p TresEDevs!1
-            docker push tresee/back-java
+            docker tag back-java docker.tresee.app/back-java:latest
+            docker push docker.tresee.app/back-java
             '''
 
         }
