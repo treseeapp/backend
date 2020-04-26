@@ -26,7 +26,7 @@ pipeline {
             steps {
                 sh  '''
                     echo "Contruimos la imagen docker"
-                    mv ./target/app.war ./app.war
+                    cp ./target/app.war ./app.war
                     docker build -t back-java .
                     '''
             }
@@ -53,9 +53,8 @@ pipeline {
         steps  {
         sh  '''
             echo "subimos a docker hub"
-            docker tag back-java tresee/back-java:latest
-            docker login --username=tresee -p TresEDevs!1
-            docker push tresee/back-java
+            docker tag back-java docker.tresee.app/back-java:latest
+            docker push docker.tresee.app/back-java
             '''
 
         }
