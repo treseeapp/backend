@@ -1,10 +1,12 @@
 package com.tresee.backend.controller;
 
+import com.tresee.backend.enitty.Empresa;
 import com.tresee.backend.enitty.Usuario;
 import com.tresee.backend.enitty.enums.Rol;
 import com.tresee.backend.manager.AmazonManager;
 import com.tresee.backend.manager.TokenManager;
 import com.tresee.backend.manager.UsuarioManager;
+import com.tresee.backend.model.UsuarioConEmpresa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -138,15 +141,41 @@ public class UsuarioController {
      * ---------------
      * */
     @GetMapping("/admin/estudiantes")
-    public List<Usuario> getAllStudents() {
+    public List<UsuarioConEmpresa> getAllStudents() {
         List<Usuario> allUsers = this.usuarioManager.findAll();
 
         Stream<Usuario> stream = allUsers.stream().filter(usuario -> usuario.getRol() == Rol.ESTUDIANTE);
         List<Usuario> users = stream.collect(Collectors.toList());
+        List<UsuarioConEmpresa> toReturn = new LinkedList<>();
+
         users.forEach(usuario -> {
             usuario.setFotoPerfil(this.amazonManager.getFile(usuario.getFotoPerfil()));
+
+
+            UsuarioConEmpresa individual = new UsuarioConEmpresa();
+            Empresa empresaIndividual = new Empresa();
+
+            individual.setIdusuario(usuario.getIdusuario());
+            individual.setNombre(usuario.getNombre());
+            individual.setApellidos(usuario.getApellidos());
+            individual.setEmail(usuario.getEmail());
+            individual.setDataNacimiento(usuario.getDataNacimiento());
+            individual.setGenero(usuario.getGenero());
+
+            if (usuario.getEmpresa() != null) {
+                empresaIndividual.setIdempresa(usuario.getEmpresa().getIdempresa());
+                empresaIndividual.setNombre(usuario.getEmpresa().getNombre());
+                individual.setEmpresa(empresaIndividual);
+            } else {
+                individual.setEmpresa(null);
+            }
+            individual.setFichajes(usuario.getFichajes());
+            individual.setFotoPerfil(usuario.getFotoPerfil());
+            individual.setDireccion(usuario.getDireccion());
+
+            toReturn.add(individual);
         });
-        return users;
+        return toReturn;
     }
 
     @GetMapping("/admin/estudiantes/{id}")
