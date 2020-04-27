@@ -151,7 +151,6 @@ public class EmpresaController {
         Empresa empresa = empresaManager.findById(id);
 
         if (imageName != null) {
-
             if (empresa.getFotoEmpresa() != null && !empresa.getFotoEmpresa().equals(""))
                 this.amazonManager.deletePicture(empresa.getFotoEmpresa());
             empresa.setFotoEmpresa(imageName);
@@ -159,6 +158,14 @@ public class EmpresaController {
 
         empresaManager.update(empresa);
         return new ResponseEntity<>("Foto subida correctamente.", HttpStatus.OK);
+    }
+
+    @GetMapping("/admin/empresas/{id}/foto")
+    @Transactional
+    public ResponseEntity<String> getFotoCompany(@PathVariable Long id) {
+        Empresa empresa = empresaManager.findById(id);
+        if (empresa.getFotoEmpresa() == null) return new ResponseEntity<>("No tiene foto", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(amazonManager.getFile(empresa.getFotoEmpresa()), HttpStatus.OK);
     }
 
     @PostMapping("/admin/empresas/vincular/user")
