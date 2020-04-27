@@ -151,7 +151,6 @@ public class UsuarioController {
         users.forEach(usuario -> {
             usuario.setFotoPerfil(this.amazonManager.getFile(usuario.getFotoPerfil()));
 
-
             UsuarioConEmpresa individual = new UsuarioConEmpresa();
             Empresa empresaIndividual = new Empresa();
 
