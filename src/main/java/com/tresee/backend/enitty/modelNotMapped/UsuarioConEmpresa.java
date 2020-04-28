@@ -1,6 +1,5 @@
-package com.tresee.backend.model;
+package com.tresee.backend.enitty.modelNotMapped;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tresee.backend.enitty.Empresa;
 import com.tresee.backend.enitty.Fichaje;
 import com.tresee.backend.enitty.enums.Genero;
@@ -18,8 +17,6 @@ public class UsuarioConEmpresa {
     private String direccion;
     private String email;
     private LocalDate dataNacimiento;
-    @JsonIgnore
-    private String contraseña;
     private Rol rol;
     private Genero genero;
     private ModoInicioSesion modoInicioSesion;
@@ -76,14 +73,6 @@ public class UsuarioConEmpresa {
 
     public void setDataNacimiento(LocalDate dataNacimiento) {
         this.dataNacimiento = dataNacimiento;
-    }
-
-    public String getContraseña() {
-        return contraseña;
-    }
-
-    public void setContraseña(String contraseña) {
-        this.contraseña = contraseña;
     }
 
     public Rol getRol() {
