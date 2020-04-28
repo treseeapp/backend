@@ -1,5 +1,6 @@
 FROM tomcat
-WORKDIR /usr/local/tomcat/webapps
-COPY ./target/app.war ./ROOT.war
+WORKDIR /usr/local/tomcat/
+RUN mkdir uploads
+COPY ./target/app.war ./webapps/ROOT.war
 RUN ls -la
 EXPOSE 8080
