@@ -222,4 +222,11 @@ public class UsuarioController {
         return new ResponseEntity<>("Usuario convertido a profesor", HttpStatus.OK);
     }
 
+
+    @PostMapping("/admin/estudiantes/upload/csv")
+    public ResponseEntity<String> addStudentCsv(@RequestPart(value = "file") final MultipartFile csv){
+
+        return new ResponseEntity<>("ok", HttpStatus.OK);
+    }
+
 }
