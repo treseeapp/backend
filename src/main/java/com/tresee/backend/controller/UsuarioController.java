@@ -2,9 +2,12 @@ package com.tresee.backend.controller;
 
 import com.tresee.backend.enitty.Empresa;
 import com.tresee.backend.enitty.Usuario;
+import com.tresee.backend.enitty.enums.ModoInicioSesion;
 import com.tresee.backend.enitty.enums.Rol;
+import com.tresee.backend.enitty.modelCsv.UsuarioCSV;
 import com.tresee.backend.enitty.modelNotMapped.UsuarioConEmpresa;
 import com.tresee.backend.manager.AmazonManager;
+import com.tresee.backend.manager.CsvManager;
 import com.tresee.backend.manager.TokenManager;
 import com.tresee.backend.manager.UsuarioManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +35,9 @@ public class UsuarioController {
 
     @Autowired
     private AmazonManager amazonManager;
+
+    @Autowired
+    private CsvManager csvManager;
 
     @GetMapping("/private/usuario")
     public Usuario getMyInfo(HttpServletRequest request) {
@@ -224,9 +230,32 @@ public class UsuarioController {
 
 
     @PostMapping("/admin/estudiantes/upload/csv")
-    public ResponseEntity<String> addStudentCsv(@RequestPart(value = "file") final MultipartFile csv){
+    public ResponseEntity<String> addStudentCsv(@RequestPart(value = "file") final MultipartFile csv) {
 
-        return new ResponseEntity<>("ok", HttpStatus.OK);
+        if (csv.isEmpty()) {
+            return new ResponseEntity<>("Archivo csv no recivido", HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            List<UsuarioCSV> usuariosCsv = this.csvManager.toUsuario(csv);
+            for (UsuarioCSV user : usuariosCsv) {
+                if (this.usuarioManager.findByEmail(user.getEmail()) != null) continue;
+
+                Usuario usuario = new Usuario();
+                usuario.setNombre(user.getNombre());
+                usuario.setApellidos(user.getApellidos());
+                usuario.setEmail(user.getEmail());
+                usuario.setModoInicioSesion(ModoInicioSesion.LOCAL);
+                usuario.setRol(Rol.ESTUDIANTE);
+
+                this.usuarioManager.update(usuario);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Ha habido un error", HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>("Usuarios añadidos correctamente", HttpStatus.OK);
     }
 
 }
