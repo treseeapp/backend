@@ -1,6 +1,7 @@
 package com.tresee.backend.enitty;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.opencsv.bean.CsvBindByName;
 import com.tresee.backend.enitty.enums.Genero;
 import com.tresee.backend.enitty.enums.ModoInicioSesion;
 import com.tresee.backend.enitty.enums.Rol;
@@ -18,15 +19,18 @@ public class Usuario {
     @Column(name = "idusuario")
     private Long idusuario;
 
+    @CsvBindByName
     @Column(name = "nombre", length = 30, nullable = false)
     private String nombre;
 
+    @CsvBindByName
     @Column(name = "apellidos", length = 60, nullable = false)
     private String apellidos;
 
     @Column(name = "direccion", length = 60)
     private String direccion;
 
+    @CsvBindByName
     @Column(name = "email", length = 80, nullable = false)
     private String email;
 

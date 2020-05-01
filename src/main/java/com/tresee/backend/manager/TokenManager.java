@@ -5,9 +5,13 @@ import com.tresee.backend.repository.UsuarioRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.impl.TextCodec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 
 @Service
 public class TokenManager {
@@ -16,6 +20,15 @@ public class TokenManager {
     private Environment environment;
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    public String createTokenEmail(String email) {
+        return Jwts.builder()
+                .claim("email", email)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 3600000))
+                .signWith(SignatureAlgorithm.HS256, TextCodec.BASE64.encode(environment.getProperty("jwt.secret")))
+                .compact();
+    }
 
     public String validateToken(String token) {
         try {
