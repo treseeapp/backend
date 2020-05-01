@@ -6,11 +6,9 @@ import com.tresee.backend.enitty.enums.ModoInicioSesion;
 import com.tresee.backend.enitty.enums.Rol;
 import com.tresee.backend.enitty.modelCsv.UsuarioCSV;
 import com.tresee.backend.enitty.modelNotMapped.UsuarioConEmpresa;
-import com.tresee.backend.manager.AmazonManager;
-import com.tresee.backend.manager.CsvManager;
-import com.tresee.backend.manager.TokenManager;
-import com.tresee.backend.manager.UsuarioManager;
+import com.tresee.backend.manager.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +36,12 @@ public class UsuarioController {
 
     @Autowired
     private CsvManager csvManager;
+
+    @Autowired
+    private CorreoManager correoManager;
+
+    @Autowired
+    private Environment environment;
 
     @GetMapping("/private/usuario")
     public Usuario getMyInfo(HttpServletRequest request) {
@@ -230,7 +234,16 @@ public class UsuarioController {
 
 
     @PostMapping("/admin/estudiantes/upload/csv")
-    public ResponseEntity<String> addStudentCsv(@RequestPart(value = "file") final MultipartFile csv) {
+    @Transactional
+    public ResponseEntity<String> addStudentCsv(@RequestPart(value = "file") final MultipartFile csv, HttpServletRequest request) {
+        /*
+         * Cogemos el usuario del token, asi nos aseguramos de
+         * que el usuario que se modifica es a si mismo
+         * */
+        String token = request.getHeader("Authorization");
+        token = token.replace("Bearer ", "");
+        Usuario profesor = tokenManager.getUsuarioFromToken(token);
+
 
         if (csv.isEmpty()) {
             return new ResponseEntity<>("Archivo csv no recivido", HttpStatus.BAD_REQUEST);
@@ -247,8 +260,13 @@ public class UsuarioController {
                 usuario.setEmail(user.getEmail());
                 usuario.setModoInicioSesion(ModoInicioSesion.LOCAL);
                 usuario.setRol(Rol.ESTUDIANTE);
-
                 this.usuarioManager.update(usuario);
+
+                String tokenUser = this.tokenManager.createTokenEmail(usuario.getEmail());
+                String urlPassword = environment.getProperty("cors.allowed") + "/change/password?tokenUserModify=" + tokenUser;
+
+                System.out.println(urlPassword);
+                this.correoManager.sendEmailActivateAccount(usuario.getEmail(), "Activacion de cuenta", urlPassword, profesor.getNombre());
             }
         } catch (Exception e) {
             e.printStackTrace();

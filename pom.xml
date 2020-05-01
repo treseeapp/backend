@@ -119,6 +119,12 @@
             <artifactId>opencsv</artifactId>
             <version>5.0</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.mashape.unirest/unirest-java -->
+        <dependency>
+            <groupId>com.mashape.unirest</groupId>
+            <artifactId>unirest-java</artifactId>
+            <version>1.4.9</version>
+        </dependency>
 
     </dependencies>
 
