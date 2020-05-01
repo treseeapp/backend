@@ -2,12 +2,13 @@ package com.tresee.backend.controller;
 
 import com.tresee.backend.enitty.Empresa;
 import com.tresee.backend.enitty.Usuario;
+import com.tresee.backend.enitty.enums.ModoInicioSesion;
 import com.tresee.backend.enitty.enums.Rol;
+import com.tresee.backend.enitty.modelCsv.UsuarioCSV;
 import com.tresee.backend.enitty.modelNotMapped.UsuarioConEmpresa;
-import com.tresee.backend.manager.AmazonManager;
-import com.tresee.backend.manager.TokenManager;
-import com.tresee.backend.manager.UsuarioManager;
+import com.tresee.backend.manager.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +33,15 @@ public class UsuarioController {
 
     @Autowired
     private AmazonManager amazonManager;
+
+    @Autowired
+    private CsvManager csvManager;
+
+    @Autowired
+    private CorreoManager correoManager;
+
+    @Autowired
+    private Environment environment;
 
     @GetMapping("/private/usuario")
     public Usuario getMyInfo(HttpServletRequest request) {
@@ -220,6 +230,49 @@ public class UsuarioController {
         userToModify.setRol(Rol.PROFESOR);
         this.usuarioManager.update(userToModify);
         return new ResponseEntity<>("Usuario convertido a profesor", HttpStatus.OK);
+    }
+
+
+    @PostMapping("/admin/estudiantes/upload/csv")
+    @Transactional
+    public ResponseEntity<String> addStudentCsv(@RequestPart(value = "file") final MultipartFile csv, HttpServletRequest request) {
+        /*
+         * Cogemos el usuario del token, asi nos aseguramos de
+         * que el usuario que se modifica es a si mismo
+         * */
+        String token = request.getHeader("Authorization");
+        token = token.replace("Bearer ", "");
+        Usuario profesor = tokenManager.getUsuarioFromToken(token);
+
+
+        if (csv.isEmpty()) {
+            return new ResponseEntity<>("Archivo csv no recivido", HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            List<UsuarioCSV> usuariosCsv = this.csvManager.toUsuario(csv);
+            for (UsuarioCSV user : usuariosCsv) {
+                if (this.usuarioManager.findByEmail(user.getEmail()) != null) continue;
+
+                Usuario usuario = new Usuario();
+                usuario.setNombre(user.getNombre());
+                usuario.setApellidos(user.getApellidos());
+                usuario.setEmail(user.getEmail());
+                usuario.setModoInicioSesion(ModoInicioSesion.LOCAL);
+                usuario.setRol(Rol.ESTUDIANTE);
+                this.usuarioManager.update(usuario);
+
+                String tokenUser = this.tokenManager.createTokenEmail(usuario.getEmail());
+                String urlPassword = environment.getProperty("frontendUrl") + "/change/password?tokenUserModify=" + tokenUser;
+
+                this.correoManager.sendEmailActivateAccount(usuario.getEmail(), "Activacion de cuenta", urlPassword, profesor.getNombre());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Ha habido un error", HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>("Usuarios añadidos correctamente", HttpStatus.OK);
     }
 
 }
