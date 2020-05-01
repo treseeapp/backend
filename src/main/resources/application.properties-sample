@@ -54,3 +54,6 @@ spring.servlet.multipart.max-request-size=10MB
 
 MAILGUN_API_KEY=
 MAILGUN_DOMAIN=
+MAILGUN_BASE_URL= ####   https://api.eu.mailgun.net/v3/ -- EUROPA    |||||   https://api.mailgun.net/v3/  ---- OTROS
+
+frontendUrl=

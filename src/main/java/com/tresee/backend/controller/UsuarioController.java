@@ -263,9 +263,8 @@ public class UsuarioController {
                 this.usuarioManager.update(usuario);
 
                 String tokenUser = this.tokenManager.createTokenEmail(usuario.getEmail());
-                String urlPassword = environment.getProperty("cors.allowed") + "/change/password?tokenUserModify=" + tokenUser;
+                String urlPassword = environment.getProperty("frontendUrl") + "/change/password?tokenUserModify=" + tokenUser;
 
-                System.out.println(urlPassword);
                 this.correoManager.sendEmailActivateAccount(usuario.getEmail(), "Activacion de cuenta", urlPassword, profesor.getNombre());
             }
         } catch (Exception e) {
