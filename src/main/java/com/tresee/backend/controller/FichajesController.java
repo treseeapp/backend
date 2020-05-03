@@ -2,9 +2,9 @@ package com.tresee.backend.controller;
 
 import com.tresee.backend.enitty.Fichaje;
 import com.tresee.backend.enitty.Usuario;
-import com.tresee.backend.manager.FichajeManager;
-import com.tresee.backend.manager.TokenManager;
-import com.tresee.backend.manager.UsuarioManager;
+import com.tresee.backend.manager.entity.FichajeManager;
+import com.tresee.backend.manager.entity.UsuarioManager;
+import com.tresee.backend.manager.seguridad.TokenManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

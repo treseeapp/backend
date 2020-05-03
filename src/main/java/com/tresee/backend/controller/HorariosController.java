@@ -1,7 +1,7 @@
 package com.tresee.backend.controller;
 
 import com.tresee.backend.enitty.EmpresaTieneDia;
-import com.tresee.backend.manager.HorarioManager;
+import com.tresee.backend.manager.entity.HorarioManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
