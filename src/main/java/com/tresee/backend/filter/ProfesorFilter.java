@@ -2,7 +2,7 @@ package com.tresee.backend.filter;
 
 import com.tresee.backend.enitty.Usuario;
 import com.tresee.backend.enitty.enums.Rol;
-import com.tresee.backend.manager.TokenManager;
+import com.tresee.backend.manager.seguridad.TokenManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 

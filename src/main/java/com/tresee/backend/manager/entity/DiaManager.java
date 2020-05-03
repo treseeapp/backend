@@ -1,4 +1,4 @@
-package com.tresee.backend.manager;
+package com.tresee.backend.manager.entity;
 
 import com.tresee.backend.enitty.Dia;
 import com.tresee.backend.repository.DiaRepository;

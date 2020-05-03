@@ -1,4 +1,4 @@
-package com.tresee.backend.manager;
+package com.tresee.backend.manager.entity;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
