@@ -1,6 +1,6 @@
 package com.tresee.backend.filter;
 
-import com.tresee.backend.manager.TokenManager;
+import com.tresee.backend.manager.seguridad.TokenManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;

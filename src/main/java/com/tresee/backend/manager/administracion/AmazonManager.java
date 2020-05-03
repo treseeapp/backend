@@ -1,4 +1,4 @@
-package com.tresee.backend.manager;
+package com.tresee.backend.manager.administracion;
 
 import com.amazonaws.HttpMethod;
 import com.amazonaws.SdkClientException;

@@ -1,4 +1,4 @@
-package com.tresee.backend.manager;
+package com.tresee.backend.manager.administracion;
 
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;

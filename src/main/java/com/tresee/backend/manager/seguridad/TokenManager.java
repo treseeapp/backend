@@ -1,4 +1,4 @@
-package com.tresee.backend.manager;
+package com.tresee.backend.manager.seguridad;
 
 import com.tresee.backend.enitty.Usuario;
 import com.tresee.backend.repository.UsuarioRepository;
