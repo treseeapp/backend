@@ -1,5 +1,7 @@
 package com.tresee.backend.controller;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.tresee.backend.enitty.Empresa;
 import com.tresee.backend.enitty.Usuario;
 import com.tresee.backend.enitty.enums.ModoInicioSesion;
@@ -46,6 +48,9 @@ public class UsuarioController {
 
     @Autowired
     private Environment environment;
+
+    @Autowired
+    private Gson gson;
 
     @GetMapping("/private/usuario")
     public Usuario getMyInfo(HttpServletRequest request) {
@@ -279,4 +284,29 @@ public class UsuarioController {
         return new ResponseEntity<>("Usuarios añadidos correctamente", HttpStatus.OK);
     }
 
+    @PostMapping("/admin/estudiante/ip")
+    public ResponseEntity<String> setIpFichaje(@RequestBody String json) {
+
+        Usuario user = new Usuario();
+
+        JsonObject jsonObject = gson.fromJson(json, JsonObject.class);
+        if (jsonObject.get("idusuario") != null) {
+            user.setIdusuario(jsonObject.get("idusuario").getAsLong());
+        }else {
+            return new ResponseEntity<>("BAD ID", HttpStatus.BAD_REQUEST);
+        }
+        if (jsonObject.get("ip") == null) {
+            return new ResponseEntity<>("IP no recivida", HttpStatus.BAD_REQUEST);
+        }
+
+
+        Usuario estudiante = this.usuarioManager.findById(user.getIdusuario());
+        // TODO - VALIDAMOS IP
+
+        String ip = jsonObject.get("ip").getAsString();
+        estudiante.setIpFichajes(ip);
+        this.usuarioManager.update(estudiante);
+
+        return new ResponseEntity<>("OK", HttpStatus.OK);
+    }
 }
