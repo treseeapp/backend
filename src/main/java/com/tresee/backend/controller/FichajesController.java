@@ -33,12 +33,17 @@ public class FichajesController {
     @Transactional
     public ResponseEntity<String> ficharEntrada(HttpServletRequest request) {
 
-        System.out.println(request.getHeader("X-FORWARDED-FOR"));
-        System.out.println(request.getRemoteAddr());
-
+        String ip = request.getHeader("X-FORWARDED-FOR");
         String token = request.getHeader("Authorization");
         token = token.replace("Bearer ", "");
         Usuario usuario = tokenManager.getUsuarioFromToken(token);
+
+        if (usuario.getIpFichajes()!=null){
+            if (!usuario.getIpFichajes().equals(ip)){
+               return new ResponseEntity<>("Has de conectarte a la ip que te han asignado", HttpStatus.BAD_REQUEST);
+            }
+        }
+
         List<Fichaje> fichajes = usuario.getFichajes();
         Fichaje ultimoFichaje = null;
         if (fichajes.size() > 0) {
@@ -86,9 +91,17 @@ public class FichajesController {
     @PutMapping("/private/estudiante/fichaje")
     @Transactional
     public ResponseEntity<String> ficharSalida(HttpServletRequest request) {
+        String ip = request.getHeader("X-FORWARDED-FOR");
         String token = request.getHeader("Authorization");
         token = token.replace("Bearer ", "");
         Usuario usuario = tokenManager.getUsuarioFromToken(token);
+
+
+        if (usuario.getIpFichajes()!=null){
+            if (!usuario.getIpFichajes().equals(ip)){
+                return new ResponseEntity<>("Has de conectarte a la ip que te han asignado", HttpStatus.BAD_REQUEST);
+            }
+        }
         List<Fichaje> fichajes = usuario.getFichajes();
         Fichaje ultimoFichaje = null;
         if (fichajes.size() > 0) {
