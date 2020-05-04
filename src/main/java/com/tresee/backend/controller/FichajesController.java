@@ -32,6 +32,10 @@ public class FichajesController {
     @PostMapping("/private/estudiante/fichaje")
     @Transactional
     public ResponseEntity<String> ficharEntrada(HttpServletRequest request) {
+
+        System.out.println(request.getHeader("X-FORWARDED-FOR"));
+        System.out.println(request.getRemoteAddr());
+
         String token = request.getHeader("Authorization");
         token = token.replace("Bearer ", "");
         Usuario usuario = tokenManager.getUsuarioFromToken(token);

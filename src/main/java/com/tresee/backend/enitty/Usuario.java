@@ -64,6 +64,8 @@ public class Usuario {
     @OneToMany(mappedBy = "usuario", orphanRemoval = true, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Fichaje> fichajes;
 
+    @Column(name = "ip_fichajes")
+    private String ipFichajes;
 
     public Usuario() {
     }
@@ -180,6 +182,14 @@ public class Usuario {
         this.fichajes.add(fichaje);
     }
 
+    public String getIpFichajes() {
+        return ipFichajes;
+    }
+
+    public void setIpFichajes(String ipFichajes) {
+        this.ipFichajes = ipFichajes;
+    }
+
     @Override
     public String toString() {
         return "Usuario{" +
@@ -196,6 +206,7 @@ public class Usuario {
                 ", fotoPerfil='" + fotoPerfil + '\'' +
                 ", empresa=" + empresa +
                 ", fichajes=" + fichajes +
+                ", ipFichajes='" + ipFichajes + '\'' +
                 '}';
     }
 }
