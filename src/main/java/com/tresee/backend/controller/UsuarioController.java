@@ -309,4 +309,23 @@ public class UsuarioController {
 
         return new ResponseEntity<>("OK", HttpStatus.OK);
     }
+
+    @DeleteMapping("/admin/estudiante/ip")
+    public ResponseEntity<String> removeIpFichaje(@RequestBody String json) {
+        System.out.println(json);
+        Usuario user = new Usuario();
+        JsonObject jsonObject = gson.fromJson(json, JsonObject.class);
+        if (jsonObject.get("idusuario") != null) {
+            user.setIdusuario(jsonObject.get("idusuario").getAsLong());
+        }else {
+            return new ResponseEntity<>("BAD ID", HttpStatus.BAD_REQUEST);
+        }
+
+        Usuario estudiante = this.usuarioManager.findById(user.getIdusuario());
+
+        estudiante.setIpFichajes(null);
+        this.usuarioManager.update(estudiante);
+
+        return new ResponseEntity<>("OK", HttpStatus.OK);
+    }
 }
