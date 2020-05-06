@@ -99,7 +99,6 @@ public class FichajesController {
         Usuario usuario = tokenManager.getUsuarioFromToken(token);
         LocalTime ahora = LocalTime.now(Clock.systemUTC());
 
-
         if (usuario.getIpFichajes()!=null){
             if (!usuario.getIpFichajes().equals(ip)){
                 return new ResponseEntity<>("Has de conectarte a la ip que te han asignado", HttpStatus.BAD_REQUEST);
