@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -37,6 +38,7 @@ public class FichajesController {
         String token = request.getHeader("Authorization");
         token = token.replace("Bearer ", "");
         Usuario usuario = tokenManager.getUsuarioFromToken(token);
+        LocalTime ahora = LocalTime.now(Clock.systemUTC());
 
         if (usuario.getIpFichajes()!=null){
             if (!usuario.getIpFichajes().equals(ip)){
@@ -57,7 +59,7 @@ public class FichajesController {
             // SI, fichamos una entrada nueva
             Fichaje fichajeNuevo = new Fichaje();
             fichajeNuevo.setDiaFichaje(LocalDate.now());
-            fichajeNuevo.setHoraEntrada(LocalTime.now());
+            fichajeNuevo.setHoraEntrada(ahora);
             fichajeNuevo.setUsuario(usuario);
             this.fichajeManager.guardar(fichajeNuevo);
         } else {
@@ -79,7 +81,7 @@ public class FichajesController {
                 // Fichamos una entrada nueva
                 Fichaje fichajeNuevo = new Fichaje();
                 fichajeNuevo.setDiaFichaje(LocalDate.now());
-                fichajeNuevo.setHoraEntrada(LocalTime.now());
+                fichajeNuevo.setHoraEntrada(ahora);
                 fichajeNuevo.setUsuario(usuario);
                 this.fichajeManager.guardar(fichajeNuevo);
             }
@@ -95,6 +97,7 @@ public class FichajesController {
         String token = request.getHeader("Authorization");
         token = token.replace("Bearer ", "");
         Usuario usuario = tokenManager.getUsuarioFromToken(token);
+        LocalTime ahora = LocalTime.now(Clock.systemUTC());
 
 
         if (usuario.getIpFichajes()!=null){
@@ -119,7 +122,7 @@ public class FichajesController {
              * */
             if (LocalDate.now().equals(ultimoFichaje.getDiaFichaje())) {
                 //SI, podemos fichar salida
-                ultimoFichaje.setHoraSalida(LocalTime.now());
+                ultimoFichaje.setHoraSalida(ahora);
                 this.fichajeManager.guardar(ultimoFichaje);
             } else {
                 // NO, se ficha con una hora default, y se manda error
