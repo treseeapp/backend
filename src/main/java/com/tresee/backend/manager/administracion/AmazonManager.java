@@ -19,6 +19,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 @Service
@@ -101,8 +104,14 @@ public class AmazonManager {
     private String generatePresignedUrl(String fileName) {
 
         try {
+            Instant nowUtc = Instant.now();
+            ZoneId madrid = ZoneId.of("Europe/Madrid");
+            ZonedDateTime ahora = ZonedDateTime.ofInstant(nowUtc, madrid);
+            Date expiration = Date.from(ahora.toInstant());
 
-            Date expiration = new Date();
+            System.out.println(expiration);
+
+
             long expTimeMillis = expiration.getTime();
             System.out.println("date" + expiration + " | " + expiration.getTime());
             expTimeMillis += 1000 * 50;
