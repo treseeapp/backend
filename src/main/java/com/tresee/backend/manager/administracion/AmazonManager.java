@@ -104,6 +104,7 @@ public class AmazonManager {
 
             Date expiration = new Date();
             long expTimeMillis = expiration.getTime();
+            System.out.println("date" + expiration + " | " + expiration.getTime());
             expTimeMillis += 1000 * 50;
             expiration.setTime(expTimeMillis);
 
