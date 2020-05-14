@@ -1,7 +1,6 @@
 package com.tresee.backend.manager.administracion;
 
 import com.amazonaws.HttpMethod;
-import com.amazonaws.SdkClientException;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
@@ -19,9 +18,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.Date;
 
 @Service
@@ -80,7 +76,7 @@ public class AmazonManager {
          * Volvemos a juntar las partes del archivo ya que desde el
          * cliente nos llega en partes
          * */
-        File convFile = new File(path+file.getOriginalFilename());
+        File convFile = new File(path + file.getOriginalFilename());
         FileOutputStream fos = new FileOutputStream(convFile);
         fos.write(file.getBytes());
         fos.close();
@@ -97,38 +93,30 @@ public class AmazonManager {
         return urlPreSigned;
     }
 
-     /*
+    /*
      * Generamos una URL temporal de un tiempo establecido del nombre
      * del archivo recibido que se encuentra en el bucket de Amazon
      * */
     private String generatePresignedUrl(String fileName) {
 
-        try {
-            Instant nowUtc = Instant.now();
-            ZoneId madrid = ZoneId.of("Europe/Madrid");
-            ZonedDateTime ahora = ZonedDateTime.ofInstant(nowUtc, madrid);
-            Date expiration = Date.from(ahora.toInstant());
+        Date expiration = new Date();
+        System.out.println(expiration);
 
-            System.out.println(expiration);
+        long expTimeMillis = expiration.getTime();
+        System.out.println("date" + expiration + " | " + expiration.getTime());
+        expTimeMillis += 1000 * 50;
+        expiration.setTime(expTimeMillis);
+        System.out.println("date" + expiration + " | " + expiration.getTime());
+
+        GeneratePresignedUrlRequest generatePresignedUrlRequest =
+                new GeneratePresignedUrlRequest(bucketName, fileName)
+                        .withMethod(HttpMethod.GET)
+                        .withExpiration(expiration);
+        URL url = s3client.generatePresignedUrl(generatePresignedUrlRequest);
+
+        return url.toString();
 
 
-            long expTimeMillis = expiration.getTime();
-            System.out.println("date" + expiration + " | " + expiration.getTime());
-            expTimeMillis += 1000 * 50;
-            expiration.setTime(expTimeMillis);
-            System.out.println("date" + expiration + " | " + expiration.getTime());
-
-            GeneratePresignedUrlRequest generatePresignedUrlRequest =
-                    new GeneratePresignedUrlRequest(bucketName, fileName)
-                            .withMethod(HttpMethod.GET)
-                            .withExpiration(expiration);
-            URL url = s3client.generatePresignedUrl(generatePresignedUrlRequest);
-
-            return url.toString();
-
-        } catch (SdkClientException e) {
-            return null;
-        }
     }
 
     public boolean deletePicture(String nombre) {
