@@ -107,6 +107,7 @@ public class AmazonManager {
             System.out.println("date" + expiration + " | " + expiration.getTime());
             expTimeMillis += 1000 * 50;
             expiration.setTime(expTimeMillis);
+            System.out.println("date" + expiration + " | " + expiration.getTime());
 
             GeneratePresignedUrlRequest generatePresignedUrlRequest =
                     new GeneratePresignedUrlRequest(bucketName, fileName)
