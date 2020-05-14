@@ -113,6 +113,7 @@ public class AmazonManager {
                             .withExpiration(expiration);
             URL url = s3client.generatePresignedUrl(generatePresignedUrlRequest);
 
+            System.out.println(url.toString());
             return url.toString();
 
         } catch (SdkClientException e) {
