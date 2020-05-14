@@ -104,7 +104,7 @@ public class AmazonManager {
 
             Date expiration = new Date();
             long expTimeMillis = expiration.getTime();
-            expTimeMillis += 1000 * 10;
+            expTimeMillis += 1000 * 50;
             expiration.setTime(expTimeMillis);
 
             GeneratePresignedUrlRequest generatePresignedUrlRequest =
@@ -113,7 +113,6 @@ public class AmazonManager {
                             .withExpiration(expiration);
             URL url = s3client.generatePresignedUrl(generatePresignedUrlRequest);
 
-            System.out.println(url.toString());
             return url.toString();
 
         } catch (SdkClientException e) {
