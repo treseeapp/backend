@@ -29,7 +29,6 @@ pipeline {
                     cp ./target/app.war ./app.war
                     docker build -t back-java .
                     '''
-                cleanWs()
             }
     }
 
@@ -44,7 +43,6 @@ pipeline {
                 docker container rm java
                 docker run -d --name java --network host back-java
                 '''
-            cleanWs()
         }
     }
 
@@ -58,7 +56,6 @@ pipeline {
                 docker tag back-java docker.tresee.app/back-java
                 docker push docker.tresee.app/back-java
                 '''
-            cleanWs()
         }
     }
   }
