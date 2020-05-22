@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -38,7 +37,7 @@ public class FichajesController {
         String token = request.getHeader("Authorization");
         token = token.replace("Bearer ", "");
         Usuario usuario = tokenManager.getUsuarioFromToken(token);
-        LocalTime ahora = LocalTime.now(Clock.systemUTC());
+        LocalTime ahora = LocalTime.now();
 
         if (usuario.getIpFichajes()!=null){
             if (!usuario.getIpFichajes().equals(ip)){
@@ -97,7 +96,7 @@ public class FichajesController {
         String token = request.getHeader("Authorization");
         token = token.replace("Bearer ", "");
         Usuario usuario = tokenManager.getUsuarioFromToken(token);
-        LocalTime ahora = LocalTime.now(Clock.systemUTC());
+        LocalTime ahora = LocalTime.now();
 
         if (usuario.getIpFichajes()!=null){
             if (!usuario.getIpFichajes().equals(ip)){
