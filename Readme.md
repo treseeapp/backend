@@ -1,5 +1,5 @@
-#Tresee - Backend Java EE + SpringBoot
-######Trabajo de final de grado (TFG).
+# Tresee - Backend Java EE + SpringBoot
+###### Trabajo de final de grado (TFG).
 
 Tresee es una plataforma que intenta unir mas que nunca el profesorado 
 con el alumnado en la durada de las practicas en la empresa. Dando 
@@ -8,7 +8,7 @@ y el profesor poder controlar el estado de dichas de cada estudiante en
 todo momento.
 
 
-###Como usar la aplicación
+### Como usar la aplicación
 Si quieres ver la aplicacion desplegada, solo tienes que acceder a [nuestra web](https://tresee.app).
 
 Si lo que quieres, es ejecutarla en tu ordenador en modo de desarrollo tendras que seguir el manual de instalacion que tenemos mas abajo.
